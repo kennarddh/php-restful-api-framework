@@ -128,6 +128,11 @@ class BaseRoutes
 	 */
 	public function errorHandler(string $handler): void
 	{
+		if ($this->errorHandler !== null) {
+			throw new Exception('Error handler already set');
+
+			return;
+		}
 
 		$functionName = ResolveController::ResolveFunctionName($handler);
 

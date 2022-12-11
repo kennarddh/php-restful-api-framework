@@ -6,13 +6,52 @@ use Internal\Routes\Utils as RoutesUtils;
 
 class Request
 {
+	/**
+	 * Internal use only
+	 * 
+	 * Use header method to get header
+	 */
 	protected array $headers;
+
+	/**
+	 * Path parameters
+	 */
 	public object $params;
+
+	/**
+	 * Body
+	 * 
+	 * From raw json and form data
+	 */
 	public object $body;
+
+	/**
+	 * Query parameters
+	 */
 	public object $queryParameters;
+
+	/**
+	 * Is secure
+	 * 
+	 * Is secure become true if protocol is https otherwise it's false
+	 */
 	public bool $isSecure;
+
+	/**
+	 * Http method
+	 */
 	public string $method;
+
+	/**
+	 * Request url
+	 */
 	public string $baseUrl;
+
+	/**
+	 * Request ip
+	 * 
+	 * Maybe not correct if application behind reverse proxy
+	 */
 	public string $ip;
 
 	/**
@@ -48,9 +87,11 @@ class Request
 	}
 
 	/**
+	 * Get header by key
+	 * 
 	 * Case insensitive
 	 * 
-	 * - replaced with _
+	 * - character replaced with _ character
 	 */
 	public function header(string $key): string | null
 	{

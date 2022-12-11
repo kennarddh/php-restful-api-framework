@@ -1,6 +1,6 @@
 <?php
 
-namespace Routes;
+namespace Application\Routes;
 
 use Internal\Routes\BaseRoutes;
 

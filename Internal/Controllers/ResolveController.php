@@ -8,7 +8,7 @@ class ResolveController
 	{
 		$name = explode('::', $controllerString)[0];
 
-		$computedName = 'Controllers\\' . $name;
+		$computedName = 'Application\\Controllers\\' . $name;
 
 		return $computedName;
 	}

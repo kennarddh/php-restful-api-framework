@@ -7,7 +7,7 @@ use Internal\Controllers\ResolveController;
 use Internal\Http\Request;
 use Internal\Http\Response;
 use Internal\Middlewares\ResolveMiddleware;
-use Routes\Routes;
+use Application\Routes\Routes;
 
 class Router
 {

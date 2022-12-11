@@ -8,7 +8,7 @@ class ResolveMiddleware
 	{
 		$name = explode('::', $controllerString)[0];
 
-		$computedName = 'Middlewares\\' . $name;
+		$computedName = 'Application\\Middlewares\\' . $name;
 
 		return $computedName;
 	}

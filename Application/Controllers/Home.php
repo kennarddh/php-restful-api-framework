@@ -1,8 +1,7 @@
 <?php
 
-namespace Controllers;
+namespace Application\Controllers;
 
-use Error;
 use Exception;
 use Internal\Controllers\BaseController;
 

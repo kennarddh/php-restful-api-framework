@@ -1,6 +1,6 @@
 <?php
 
-namespace Middlewares;
+namespace Application\Middlewares;
 
 use Internal\Middlewares\BaseMiddleware;
 

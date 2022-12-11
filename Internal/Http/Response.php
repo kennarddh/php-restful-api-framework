@@ -4,7 +4,6 @@ namespace Internal\Http;
 
 use Closure;
 use Exception;
-use stdClass;
 
 class Response
 {

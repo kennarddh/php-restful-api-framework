@@ -20,7 +20,7 @@ class CLI
 
 	public function write(string $text, int $colorType = null)
 	{
-		if ($colorType === null) $colorType = Colorize::$NORMAL;
+		if ($colorType === null) $colorType = Colorize::$DEFAULT;
 
 		fwrite($this->output, Colorize::Colorize($text, $colorType));
 	}

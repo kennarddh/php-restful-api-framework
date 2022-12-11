@@ -5,6 +5,9 @@ namespace Internal\Middlewares;
 use Internal\Http\Request;
 use Internal\Http\Response;
 
+/**
+ * All middlewares must to extend BaseMiddleware
+ */
 class BaseMiddleware
 {
 	protected Request $request;

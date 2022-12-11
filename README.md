@@ -16,6 +16,6 @@
 -   [ ] Send File
 -   [ ] Testing
 -   [ ] Base Url Config
--   [ ] Serve Command
+-   [X] Start Command
 -   [ ] Environtment Variable
 -   [ ] Logger

@@ -11,7 +11,7 @@ class ResolveCommand
 	/**
 	 * Internal use only
 	 * 
-	 * Used for refrence to current cli instance
+	 * Used for reference to current cli instance
 	 */
 	public CLI $cli;
 
@@ -34,6 +34,8 @@ class ResolveCommand
 
 	/**
 	 * Resolve and run command
+	 * 
+	 * @throws InvalidArgumentException
 	 */
 	public function resolve()
 	{

@@ -12,6 +12,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../Common/AutoLoader.php';
 use Common\Autoloader;
 use Internal\Routes\Router;
 
+// Register autoloader
 AutoLoader::Register();
 
+// Register router
 Router::Register();

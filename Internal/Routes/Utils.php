@@ -4,6 +4,13 @@ namespace Internal\Routes;
 
 class Utils
 {
+	/**
+	 * Internal use only
+	 * 
+	 * Convert path to regex
+	 * 
+	 * Character * will match anything including / (slash) character
+	 */
 	public static function ToRegex(string $path, array &$keys)
 	{
 		$mapPathSplitedRegex = function (string $value, array &$keys2) {
@@ -43,6 +50,11 @@ class Utils
 		return $regex;
 	}
 
+	/**
+	 * Check is path match with supplied url
+	 * 
+	 * Return path parameters in refrence parameter
+	 */
 	public static function IsUrlMatch(string $path, string $url, object &$params)
 	{
 		$values = [];
@@ -62,6 +74,9 @@ class Utils
 		return $result;
 	}
 
+	/**
+	 * Get current url
+	 */
 	public static function GetUrl(): string
 	{
 		return trim(strtok($_SERVER["REQUEST_URI"], '?'), '/') . '/';

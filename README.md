@@ -17,5 +17,6 @@
 -   [ ] Testing
 -   [ ] Base Url Config
 -   [X] Start Command
+-   [X] List Command
 -   [ ] Environtment Variable
 -   [ ] Logger

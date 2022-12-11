@@ -5,6 +5,9 @@ namespace Internal\Controllers;
 use Internal\Http\Request;
 use Internal\Http\Response;
 
+/**
+ * All controllers required to extend BaseController
+ */
 abstract class BaseController
 {
 	protected Request $request;

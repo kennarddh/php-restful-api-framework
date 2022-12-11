@@ -16,7 +16,9 @@
 -   [ ] Send File
 -   [ ] Testing
 -   [ ] Base Url Config
--   [X] Start Command
+-   [x] Start Command
 -   [ ] Help Command
 -   [ ] Environtment Variable
 -   [ ] Logger
+
+Search in file `(TODO)` to get all to do in comment

@@ -3,6 +3,7 @@
 namespace Internal\Http;
 
 use Closure;
+use Common\OutputBuffer;
 use Exception;
 
 class Response
@@ -269,7 +270,7 @@ class Response
 			return $this;
 		}
 
-		echo json_encode($this->body);
+		OutputBuffer::set(json_encode($this->body));
 
 		return $this;
 	}

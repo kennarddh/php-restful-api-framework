@@ -18,7 +18,7 @@ class Routes extends BaseRoutes
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');
 		$this->get(':id', 'Home::index');
-		$this->get('*', 'Home::matchAll');
+		$this->all('*', 'Home::matchAll');
 
 		$this->errorHandler('Home::error');
 	}

@@ -3,6 +3,7 @@
 namespace Internal\Routes;
 
 use Closure;
+use Common\OutputBuffer;
 use Exception;
 use Internal\Controllers\ResolveController;
 use Internal\Http\Request;
@@ -29,6 +30,8 @@ class BaseRoutes
 	 * Can only be set in root route
 	 * 
 	 * If set in other routes error handler will be ignored
+	 * 
+	 * Only register shutdown in root routes (TODO)
 	 */
 	public Closure | null $errorHandler = null;
 
@@ -40,12 +43,18 @@ class BaseRoutes
 
 			$error = error_get_last();
 
-			if ($error === null) return;
+			if ($error === null) {
+				OutputBuffer::flush();
+
+				return;
+			}
 
 			$type = $error['type'];
 			$message = $error['message'];
 			$file = $error['file'];
 			$line = $error['line'];
+
+			OutputBuffer::clear();
 
 			($this->errorHandler)(
 				$type,
@@ -53,6 +62,8 @@ class BaseRoutes
 				$file,
 				$line,
 			);
+
+			OutputBuffer::flush();
 
 			return true;
 		};

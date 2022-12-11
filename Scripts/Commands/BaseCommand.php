@@ -9,7 +9,6 @@ abstract class BaseCommand
 	/**
 	 * Command name
 	 */
-
 	public static string $name;
 
 	/**
@@ -20,7 +19,7 @@ abstract class BaseCommand
 	/**
 	 * Internal use only
 	 * 
-	 * Used for refrence to current cli instance
+	 * Used for reference to current cli instance
 	 */
 	public CLI $cli;
 

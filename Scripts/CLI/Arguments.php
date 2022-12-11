@@ -62,6 +62,9 @@ class Arguments
 					}
 				}
 
+				if ($namedRemovedPrefix === '')
+					throw new InvalidArgumentException('Single dash flag empty');
+
 				if (str_contains($namedRemovedPrefix, '-'))
 					throw new InvalidArgumentException('Single dash flag argument cannot contain - character');
 

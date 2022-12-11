@@ -18,19 +18,21 @@ class CLI
 	}
 
 
-	public function write(string $text)
+	public function write(string $text, int $colorType = null)
 	{
-		fwrite($this->output, $text);
+		if ($colorType === null) $colorType = Colorize::$NORMAL;
+
+		fwrite($this->output, Colorize::Colorize($text, $colorType));
 	}
 
-	public function writeLine(string $text)
+	public function writeLine(string $text, int $colorType = null)
 	{
-		$this->write($text . PHP_EOL);
+		$this->write($text . PHP_EOL, $colorType);
 	}
 
 	public function writeError(string $text)
 	{
-		fwrite($this->error, $text);
+		fwrite($this->error, Colorize::Colorize($text, Colorize::$RED));
 	}
 
 	public function writeErrorLine(string $text)

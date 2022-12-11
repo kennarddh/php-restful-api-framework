@@ -5,7 +5,9 @@ namespace Internal\Controllers;
 class ResolveController
 {
 	/**
-	 * Resolve controller namespace
+	 * Internal use only
+	 * 
+	 * Resolve controller class
 	 */
 	public static function ResolveComputed(string $controllerString)
 	{
@@ -17,6 +19,8 @@ class ResolveController
 	}
 
 	/**
+	 * Internal use only
+	 * 
 	 * Resolve controller method to call
 	 */
 	public static function ResolveFunctionName(string $controllerString)

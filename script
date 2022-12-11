@@ -19,4 +19,6 @@ $cli = new CLI($argv);
 
 $cli->writeLine('hello');
 $cli->writeLine('hello');
-$cli->writeLine(CLI::Serialize($cli->argv));
+$cli->writeLine(CLI::Serialize($cli->arguments->arguments));
+$cli->writeLine(CLI::Serialize($cli->arguments->namedArguments));
+$cli->writeLine(CLI::Serialize($cli->arguments->options));

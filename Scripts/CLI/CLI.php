@@ -6,17 +6,17 @@ class CLI
 {
 	protected $output;
 	protected $error;
-	public array $argv;
+	public Arguments $arguments;
 
 	function __construct(array $argv, $output = STDOUT, $error = STDERR)
 	{
-		// Remove script name from argv
-		array_shift($argv);
-
 		$this->output = $output;
 		$this->error = $error;
-		$this->argv = $argv;
+
+		// Arguments
+		$this->arguments = new Arguments($argv);
 	}
+
 
 	public function write(string $text)
 	{

@@ -4,6 +4,13 @@ namespace Internal\Http;
 
 class Utils
 {
+	/**
+	 * Internal use only
+	 * 
+	 * Get Body
+	 * 
+	 * From raw json and form data
+	 */
 	public static function GetBody(): object
 	{
 		// Get raw json
@@ -15,6 +22,11 @@ class Utils
 		return (object) array_merge((array) $data, $_POST);
 	}
 
+	/**
+	 * Internal use only
+	 * 
+	 * Get query parameters
+	 */
 	public static function GetQueryParameters(): object
 	{
 		$queries = [];
@@ -24,6 +36,11 @@ class Utils
 		return (object) $queries;
 	}
 
+	/**
+	 * Internal use only
+	 * 
+	 * Get headers
+	 */
 	public static function GetHeaders(): array
 	{
 		$headers = [];
@@ -37,6 +54,11 @@ class Utils
 		return $headers;
 	}
 
+	/**
+	 * Internal use only
+	 * 
+	 * Check is protocol https
+	 */
 	public static function IsSecure()
 	{
 		if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {

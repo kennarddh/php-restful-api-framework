@@ -1,6 +1,6 @@
 <?php
 
-namespace Internal;
+namespace Common;
 
 class AutoLoader
 {

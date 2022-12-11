@@ -18,21 +18,21 @@ class CLI
 	}
 
 
-	public function write(string $text, int $colorType = null)
+	public function write(string $text, array|null $formatTypes = null)
 	{
-		if ($colorType === null) $colorType = Colorize::$DEFAULT;
+		if ($formatTypes === null || empty($formatTypes)) $formatTypes = [TextFormatter::$DEFAULT_FOREGROUND];
 
-		fwrite($this->output, Colorize::Colorize($text, $colorType));
+		fwrite($this->output, TextFormatter::Format($text, $formatTypes));
 	}
 
-	public function writeLine(string $text, int $colorType = null)
+	public function writeLine(string $text, array|null $formatTypes = null)
 	{
-		$this->write($text . PHP_EOL, $colorType);
+		$this->write($text . PHP_EOL, $formatTypes);
 	}
 
 	public function writeError(string $text)
 	{
-		fwrite($this->error, Colorize::Colorize($text, Colorize::$RED));
+		fwrite($this->error, TextFormatter::Format($text, [TextFormatter::$RED_FOREGROUND]));
 	}
 
 	public function writeErrorLine(string $text)

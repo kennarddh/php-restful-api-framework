@@ -32,9 +32,11 @@ abstract class BaseCommand
 	/** 
 	 * Internal use only
 	 * 
+	 * Constructor
+	 * 
 	 * Inject cli instance to command
 	 */
-	public function injectCLI(CLI $cli): void
+	public function __construct(CLI $cli)
 	{
 		$this->cli = $cli;
 	}

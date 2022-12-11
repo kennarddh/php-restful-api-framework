@@ -6,7 +6,7 @@ use Internal\Http\Request;
 use Internal\Http\Response;
 
 /**
- * All controllers required to extend BaseController
+ * All controllers must to extend BaseController
  */
 abstract class BaseController
 {

@@ -20,7 +20,7 @@ abstract class BaseCommand
 	/**
 	 * Internal use only
 	 * 
-	 * used for refrence to current cli instance
+	 * Used for refrence to current cli instance
 	 */
 	public CLI $cli;
 

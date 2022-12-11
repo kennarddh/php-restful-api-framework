@@ -50,8 +50,11 @@ class TextFormatter
 	public static $REVERSE_FORMAT = 7;
 	public static $HIDDEN_FORMAT = 8;
 
-	public static function Format(string $text, array $type)
+	/**
+	 * Format string with supplied types
+	 */
+	public static function Format(string $text, array $types)
 	{
-		return "\033[" . join(';', $type) . "m$text\033[0m\n";
+		return "\033[" . join(';', $types) . "m$text\033[0m\n";
 	}
 }

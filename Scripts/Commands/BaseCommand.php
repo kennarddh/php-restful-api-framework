@@ -18,8 +18,6 @@ abstract class BaseCommand
 	public string $description;
 
 	/**
-	 * Private
-	 * 
 	 * Internal use only
 	 * 
 	 * used for refrence to current cli instance
@@ -32,8 +30,6 @@ abstract class BaseCommand
 	abstract public function execute();
 
 	/** 
-	 * Private
-	 * 
 	 * Internal use only
 	 * 
 	 * Inject cli instance to command

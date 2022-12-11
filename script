@@ -15,7 +15,8 @@ use Scripts\CLI\CLI;
 
 AutoLoader::Register();
 
-$cli = new CLI();
+$cli = new CLI($argv);
 
 $cli->writeLine('hello');
 $cli->writeLine('hello');
+$cli->writeLine(CLI::Serialize($cli->argv));

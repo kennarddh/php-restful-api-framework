@@ -6,11 +6,16 @@ class CLI
 {
 	protected $output;
 	protected $error;
+	public array $argv;
 
-	function __construct($output = STDOUT, $error = STDERR)
+	function __construct(array $argv, $output = STDOUT, $error = STDERR)
 	{
+		// Remove script name from argv
+		array_shift($argv);
+
 		$this->output = $output;
 		$this->error = $error;
+		$this->argv = $argv;
 	}
 
 	public function write(string $text)
@@ -31,5 +36,10 @@ class CLI
 	public function writeErrorLine(string $text)
 	{
 		$this->writeError($text . PHP_EOL);
+	}
+
+	public static function Serialize(mixed $object)
+	{
+		return print_r($object, true);
 	}
 }

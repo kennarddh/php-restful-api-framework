@@ -71,10 +71,10 @@ final class Home extends BaseController
 
 	public function tryThrow()
 	{
-		throw new Exception('error');
-
 		$this->response->send([
 			'error' => 'Error',
-		], 500);
+		], 200);
+
+		throw new Exception('error');
 	}
 }

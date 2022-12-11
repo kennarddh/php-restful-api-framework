@@ -6,8 +6,26 @@ use InvalidArgumentException;
 
 class Arguments
 {
+	/**
+	 * Arguments passed as "argumentName"
+	 * 
+	 * Without dash or double dash
+	 */
 	public array $arguments = [];
+
+	/**
+	 * Named arguments
+	 * 
+	 * Arguments passed as "--key=value" or "-key value"
+	 */
 	public array $namedArguments = [];
+
+	/**
+	 * Options or flags
+	 * 
+	 * Arguments that passed as "--name" this will set as name => true
+	 * If passed as "-name" this will set n => true, a => true, m => true, and e => true
+	 */
 	public array $options = [];
 
 	function __construct($argv = [])
@@ -15,6 +33,11 @@ class Arguments
 		$this->parseArguments($argv);
 	}
 
+	/**
+	 * Parse raw arguments and set instance property
+	 * 
+	 * @throws InvalidArgumentException
+	 */
 	public function parseArguments(array $raw): void
 	{
 		// Remove script name from argv
@@ -41,6 +64,7 @@ class Arguments
 
 					$this->namedArguments[$namedKey] = $namedValue;
 				} else {
+					// Options
 					$this->options[$namedRemovedPrefix] = true;
 				}
 			} elseif (substr($value, 0, 1) === '-') {
@@ -54,6 +78,7 @@ class Arguments
 
 				if (isset($raw[$index + 1])) {
 					if (!str_contains($raw[$index + 1], '-')) {
+						// If after single dash argument is a string this will set as named argument and skip parsing next as argument
 						$skipNext = true;
 
 						$this->namedArguments[$namedRemovedPrefix] = $raw[$index + 1];
@@ -62,16 +87,20 @@ class Arguments
 					}
 				}
 
+				// Cannot have empty single dash
 				if ($namedRemovedPrefix === '')
-					throw new InvalidArgumentException('Single dash flag empty');
+					throw new InvalidArgumentException('Single dash option empty');
 
+				// Cannot contain - character
 				if (str_contains($namedRemovedPrefix, '-'))
-					throw new InvalidArgumentException('Single dash flag argument cannot contain - character');
+					throw new InvalidArgumentException('Single dash option argument cannot contain - character');
 
+				// Set as multiple options for every charcter
 				foreach (str_split($namedRemovedPrefix) as $char) {
 					$this->options[$char] = true;
 				}
 			} else {
+				// Arguments
 				array_push($this->arguments, $value);
 			}
 		}

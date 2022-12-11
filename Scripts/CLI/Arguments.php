@@ -34,11 +34,13 @@ class Arguments
 	}
 
 	/**
+	 * Internal use only
+	 * 
 	 * Parse raw arguments and set instance property
 	 * 
 	 * @throws InvalidArgumentException
 	 */
-	public function parseArguments(array $raw): void
+	private function parseArguments(array $raw): void
 	{
 		// Remove script name from argv
 		array_shift($raw);

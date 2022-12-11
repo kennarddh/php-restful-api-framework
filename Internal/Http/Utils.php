@@ -19,7 +19,7 @@ class Utils
 	{
 		$queries = [];
 
-		parse_str($_SERVER['QUERY_STRING'], $queries);
+		parse_str($_SERVER['QUERY_STRING'] ?? '', $queries);
 
 		return (object) $queries;
 	}

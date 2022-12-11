@@ -10,12 +10,12 @@ abstract class BaseCommand
 	 * Command name
 	 */
 
-	public string $name;
+	public static string $name;
 
 	/**
 	 * Command description
 	 */
-	public string $description;
+	public static string $description;
 
 	/**
 	 * Internal use only

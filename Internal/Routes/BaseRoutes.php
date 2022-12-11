@@ -9,13 +9,32 @@ use Internal\Http\Request;
 use Internal\Http\Response;
 use stdClass;
 
+/**
+ * All routes must to extend BaseRoutes
+ */
 class BaseRoutes
 {
+	/**
+	 * Internal use only
+	 * 
+	 * All paths
+	 */
 	public array $paths = [];
+
+	/**
+	 * Internal use only
+	 * 
+	 * Current error handler
+	 * 
+	 * Can only be set in root route
+	 * 
+	 * If set in other routes error handler will be ignored
+	 */
 	public Closure | null $errorHandler = null;
 
 	function __construct()
 	{
+		// Error handler wrapper
 		$errorHandler = function () {
 			if ($this->errorHandler === null) return false;
 
@@ -38,15 +57,20 @@ class BaseRoutes
 			return true;
 		};
 
-		set_error_handler($errorHandler);
+		// Register shutdown function
 		register_shutdown_function($errorHandler);
 	}
 
+	/**
+	 * Add endpoint
+	 * 
+	 * character * will accept anything including / (slash) character
+	 */
 	public function request(
 		string $path,
 		string $method,
 		string $controller,
-		array|null $middlewares = ['before' => [], 'after' => []]
+		array | null $middlewares = ['before' => [], 'after' => []]
 	): void {
 		if (!isset($middlewares['after'])) $middlewares['after'] = [];
 		if (!isset($middlewares['before'])) $middlewares['before'] = [];
@@ -59,36 +83,71 @@ class BaseRoutes
 		]);
 	}
 
+	/**
+	 * Add get method endpoint
+	 * 
+	 * character * will accept anything including / (slash) character
+	 */
 	public function get(string $path, string $controller, array $middlewares = []): void
 	{
 		$this->request($path, "GET", $controller, $middlewares);
 	}
 
+	/**
+	 * Add post method endpoint
+	 * 
+	 * character * will accept anything including / (slash) character
+	 */
 	public function post(string $path, string $controller, array $middlewares = []): void
 	{
 		$this->request($path, "POST", $controller, $middlewares);
 	}
 
+	/**
+	 * Add put method endpoint
+	 * 
+	 * character * will accept anything including / (slash) character
+	 */
 	public function put(string $path, string $controller, array $middlewares = []): void
 	{
 		$this->request($path, "PUT", $controller, $middlewares);
 	}
 
+	/**
+	 * Add delete method endpoint
+	 * 
+	 * character * will accept anything including / (slash) character
+	 */
 	public function delete(string $path, string $controller, array $middlewares = []): void
 	{
 		$this->request($path, "DELETE", $controller, $middlewares);
 	}
 
+	/**
+	 * Add patch method endpoint
+	 * 
+	 * character * will accept anything including / (slash) character
+	 */
 	public function patch(string $path, string $controller, array $middlewares = []): void
 	{
 		$this->request($path, "PATCH", $controller, $middlewares);
 	}
 
+	/**
+	 * Add all method endpoint
+	 * 
+	 * character * will accept anything including / (slash) character
+	 */
 	public function all(string $path, string $controller, array $middlewares = []): void
 	{
 		$this->request($path, "ALL", $controller, $middlewares);
 	}
 
+	/**
+	 * Internal use only
+	 * 
+	 * Merge 2 paths
+	 */
 	protected function merge(string $path, array $middlewares, array $paths)
 	{
 		if ($middlewares === null) $middlewares = [];
@@ -109,11 +168,21 @@ class BaseRoutes
 		}
 	}
 
+	/**
+	 * Merge with other routes instance
+	 */
 	public function use(string $path, array $middlewares, BaseRoutes $routes): void
 	{
 		$this->merge($path, $middlewares, $routes->paths);
 	}
 
+	/**
+	 * Group endpoint
+	 * 
+	 * Group can be nested
+	 * 
+	 * @param Closure $callback Callback will called with $routes parameter. To add routes that will have every group property add endpoint in $routes parameter
+	 */
 	public function group(string $path, array $middlewares, Closure $callback): void
 	{
 		$newRoutes = new self();
@@ -124,6 +193,16 @@ class BaseRoutes
 	}
 
 	/**
+	 * Register error handler
+	 * 
+	 * Only one error handler can be registed
+	 * 
+	 * To change error handler first remove previous error handler by using removeErrorHandler method
+	 * 
+	 * Can only be set in root route
+	 * 
+	 * If set in other routes error handler will be ignored
+	 * 
 	 * Only response available in error handler
 	 */
 	public function errorHandler(string $handler): void
@@ -155,6 +234,9 @@ class BaseRoutes
 		};
 	}
 
+	/**
+	 * Remove current error handler
+	 */
 	public function removeErrorHandler(): void
 	{
 		$this->errorHandler = null;

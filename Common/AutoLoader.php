@@ -4,6 +4,9 @@ namespace Common;
 
 class AutoLoader
 {
+	/**
+	 * Register autoloader
+	 */
 	public static function Register()
 	{
 		spl_autoload_register(function ($class) {

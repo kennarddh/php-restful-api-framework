@@ -64,7 +64,7 @@ class BaseRoutes
 	/**
 	 * Add endpoint
 	 * 
-	 * character * will accept anything including / (slash) character
+	 * Character * will accept anything including / (slash) character
 	 */
 	public function request(
 		string $path,
@@ -86,7 +86,7 @@ class BaseRoutes
 	/**
 	 * Add get method endpoint
 	 * 
-	 * character * will accept anything including / (slash) character
+	 * Character * will accept anything including / (slash) character
 	 */
 	public function get(string $path, string $controller, array $middlewares = []): void
 	{
@@ -96,7 +96,7 @@ class BaseRoutes
 	/**
 	 * Add post method endpoint
 	 * 
-	 * character * will accept anything including / (slash) character
+	 * Character * will accept anything including / (slash) character
 	 */
 	public function post(string $path, string $controller, array $middlewares = []): void
 	{
@@ -106,7 +106,7 @@ class BaseRoutes
 	/**
 	 * Add put method endpoint
 	 * 
-	 * character * will accept anything including / (slash) character
+	 * Character * will accept anything including / (slash) character
 	 */
 	public function put(string $path, string $controller, array $middlewares = []): void
 	{
@@ -116,7 +116,7 @@ class BaseRoutes
 	/**
 	 * Add delete method endpoint
 	 * 
-	 * character * will accept anything including / (slash) character
+	 * Character * will accept anything including / (slash) character
 	 */
 	public function delete(string $path, string $controller, array $middlewares = []): void
 	{
@@ -126,7 +126,7 @@ class BaseRoutes
 	/**
 	 * Add patch method endpoint
 	 * 
-	 * character * will accept anything including / (slash) character
+	 * Character * will accept anything including / (slash) character
 	 */
 	public function patch(string $path, string $controller, array $middlewares = []): void
 	{
@@ -136,7 +136,7 @@ class BaseRoutes
 	/**
 	 * Add all method endpoint
 	 * 
-	 * character * will accept anything including / (slash) character
+	 * Character * will accept anything including / (slash) character
 	 */
 	public function all(string $path, string $controller, array $middlewares = []): void
 	{

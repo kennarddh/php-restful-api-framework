@@ -25,9 +25,7 @@ class Response
 	/**
 	 * Internal use only
 	 * 
-	 * Use setCookie method to set
-	 * 
-	 * Currently no method to get cookie (TODO)
+	 * Use setCookie method to set and cookie method to get
 	 */
 	protected array $cookies = [];
 
@@ -153,6 +151,17 @@ class Response
 		]);
 
 		return $this;
+	}
+	/**
+	 * Get cookie
+	 */
+	public function cookie(string $name): array | null
+	{
+		foreach ($this->cookies as $cookie) {
+			if ($cookie['name'] === $name) return $cookie;
+		}
+
+		return null;
 	}
 
 	/**

@@ -22,7 +22,7 @@ class Router
 		$url = Utils::GetUrl();
 		$method = $_SERVER['REQUEST_METHOD'];
 
-		// Create user defined route instance
+		// Create user defined main route
 		$routes = new Routes();
 
 		foreach ($routes->paths as $route) {

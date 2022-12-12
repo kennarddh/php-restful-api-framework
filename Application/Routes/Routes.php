@@ -8,7 +8,8 @@ class Routes extends BaseRoutes
 {
 	public function __construct()
 	{
-		parent::__construct();
+		// Pass true as first argument if this is root route
+		parent::__construct(true);
 
 		$this->get('create', 'Home::create');
 		$this->post('', 'Home::post', ["before" => ["Auth::index"], 'after' => ['Auth::after']]);

@@ -30,13 +30,28 @@ class BaseRoutes
 	 * Can only be set in root route
 	 * 
 	 * If set in other routes error handler will be ignored
-	 * 
-	 * Only register shutdown in root routes (TODO)
 	 */
 	public Closure | null $errorHandler = null;
 
-	function __construct()
+	/**
+	 * Internal use only
+	 * 
+	 * Is root routes
+	 * 
+	 * Only 1 root route	
+	 */
+	protected bool $isRoot = false;
+
+	function __construct(bool $isRoot = false)
 	{
+		$this->isRoot = $isRoot;
+
+		if (!$this->isRoot) {
+			// Not root route
+
+			return;
+		}
+
 		// Error handler wrapper
 		$errorHandler = function () {
 			if ($this->errorHandler === null) return false;
@@ -157,14 +172,22 @@ class BaseRoutes
 	/**
 	 * Internal use only
 	 * 
-	 * Merge 2 paths
+	 * Merge current route with other route route
 	 */
-	protected function merge(string $path, array $middlewares, array $paths)
+	protected function merge(string $path, array $middlewares, BaseRoutes $route)
 	{
+		if ($route->isRoot && $this->isRoot) {
+			throw new Exception('Cannot merge 2 root routes');
+
+			return;
+		}
+
 		if ($middlewares === null) $middlewares = [];
 
 		if (!isset($middlewares['after'])) $middlewares['after'] = [];
 		if (!isset($middlewares['before'])) $middlewares['before'] = [];
+
+		$paths = $route->paths;
 
 		foreach ($paths as $iterPath) {
 			array_push($this->paths, (object) [
@@ -184,7 +207,7 @@ class BaseRoutes
 	 */
 	public function use(string $path, array $middlewares, BaseRoutes $routes): void
 	{
-		$this->merge($path, $middlewares, $routes->paths);
+		$this->merge($path, $middlewares, $routes);
 	}
 
 	/**
@@ -200,7 +223,7 @@ class BaseRoutes
 
 		$callback($newRoutes);
 
-		$this->merge($path, $middlewares, $newRoutes->paths);
+		$this->merge($path, $middlewares, $newRoutes);
 	}
 
 	/**
@@ -218,6 +241,12 @@ class BaseRoutes
 	 */
 	public function errorHandler(string $handler): void
 	{
+		if (!$this->isRoot) {
+			throw new Exception('Add error handler only can be called from main route');
+
+			return;
+		}
+
 		if ($this->errorHandler !== null) {
 			throw new Exception('Error handler already set');
 
@@ -250,6 +279,12 @@ class BaseRoutes
 	 */
 	public function removeErrorHandler(): void
 	{
+		if (!$this->isRoot) {
+			throw new Exception('Remove error handler only can be called from main route');
+
+			return;
+		}
+
 		$this->errorHandler = null;
 	}
 }

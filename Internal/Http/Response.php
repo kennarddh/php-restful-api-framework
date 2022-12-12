@@ -168,10 +168,8 @@ class Response
 	 * Set body
 	 * 
 	 * Cannot called if response already ended
-	 * 
-	 * Change function name to setBody (TODO)
 	 */
-	public function json(array $data): self
+	public function setBody(array $data): self
 	{
 		if ($this->ended) {
 			throw new Exception('Request already ended');
@@ -350,7 +348,7 @@ class Response
 			$this->setStatus($statusCode);
 		}
 
-		$this->json($data);
+		$this->setBody($data);
 
 		$this->end();
 	}

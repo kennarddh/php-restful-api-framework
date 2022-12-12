@@ -10,7 +10,7 @@
 -   [ ] ORM Transaction, Nested Query, Group By, Order By, Select, Insert, Update, Delete
 -   [ ] Library JWT, File System, Security
 -   [ ] Request Validation
--   [ ] Inline Docs
+-   [x] Inline Docs
 -   [ ] Docs
 -   [ ] Semantic Versioning
 -   [ ] Send File

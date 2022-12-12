@@ -254,7 +254,7 @@ class Response
 
 		return $this;
 	}
-	
+
 	/**
 	 * Flush body
 	 * 
@@ -288,7 +288,7 @@ class Response
 	 * 
 	 * Cannot be called in after middleware
 	 * 
-	 * Cannot called if response already ended (TODO)
+	 * Cannot called if response already ended
 	 */
 	public function end(): void
 	{
@@ -296,6 +296,10 @@ class Response
 			throw new Exception('Cannot end in after middleware');
 
 			return;
+		}
+
+		if ($this->ended) {
+			throw new Exception('Request already ended');
 		}
 
 		$this->isAfterMiddleware = true;

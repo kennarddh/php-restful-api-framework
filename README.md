@@ -13,7 +13,8 @@
 -   [x] Inline Docs
 -   [ ] Docs
 -   [ ] Semantic Versioning
--   [ ] Send File
+-   [x] Send File
+-   [ ] Send File Range
 -   [ ] Testing
 -   [ ] Base Url Config
 -   [x] Start Command

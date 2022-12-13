@@ -283,6 +283,14 @@ class Response
 	}
 
 	/**
+	 * Call php flush
+	 */
+	public function flush()
+	{
+		flush();
+	}
+
+	/**
 	 * Return true if response already ended otherwise false
 	 */
 	public function ended(): bool
@@ -318,6 +326,9 @@ class Response
 		$this->flushStatus();
 		$this->flushHeaders();
 		$this->flushCookies();
+
+		$this->flush();
+
 		$this->flushBody();
 
 		$this->ended = true;

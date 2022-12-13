@@ -77,4 +77,11 @@ final class Home extends BaseController
 
 		throw new Exception('error');
 	}
+
+	public function file()
+	{
+		$filePath = __DIR__ . DIRECTORY_SEPARATOR . '.' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Public'. DIRECTORY_SEPARATOR . 'DownloadImage.png';
+
+		$this->response->sendFile('image.png', $filePath);
+	}
 }

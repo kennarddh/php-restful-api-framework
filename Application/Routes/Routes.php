@@ -16,6 +16,8 @@ class Routes extends BaseRoutes
 
 		$this->use('users', [], new UsersRoutes);
 
+		$this->get('file', 'Home::file');
+
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');
 		$this->get(':id', 'Home::index');

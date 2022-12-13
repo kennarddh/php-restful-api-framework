@@ -20,7 +20,7 @@ class Response
 	 * 
 	 * Use setHeader method to set and header method to get
 	 */
-	protected array $headers = ['Content-type' => 'application/json'];
+	protected array $headers = [];
 
 	/**
 	 * Internal use only
@@ -177,6 +177,8 @@ class Response
 			return $this;
 		}
 
+		$this->setHeader('Content-type', 'application/json');
+
 		$this->body = $data;
 
 		return $this;
@@ -329,7 +331,24 @@ class Response
 
 		$this->flush();
 
-		$this->flushBody();
+		if (!empty($this->body)) {
+			// Send body
+			$this->flushBody();
+		} else {
+			// Send file
+			// Disable timeout
+			set_time_limit(0);
+
+			$file = fopen($this->fileData['filePath'], "rb");
+
+			while (!feof($file)) {
+				$fileChunk = fread($file, 1024 * 8);
+
+				echo $fileChunk;
+
+				$this->flush();
+			}
+		}
 
 		$this->ended = true;
 	}
@@ -360,6 +379,55 @@ class Response
 		}
 
 		$this->setBody($data);
+
+		$this->end();
+	}
+
+	/**
+	 * Send file
+	 */
+	public function sendFile(string $fileName, string $filePath)
+	{
+		if ($this->isAfterMiddleware) {
+			throw new Exception('Cannot send file in after middleware');
+
+			return;
+		}
+
+		if ($this->ended) {
+			throw new Exception('Request already ended');
+		}
+
+		if (!file_exists($filePath)){
+			throw new Exception('File doesn\'t exist');
+
+			return;
+		}
+
+		// Set file content type
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+		$mime = finfo_file($finfo, $filePath);
+		$this->setHeader('Content-Type', $mime);
+		finfo_close($finfo);
+
+		$this->setHeader('Content-Disposition', "attachment; filename=$fileName");
+
+		// No cache
+		$this->setHeader('Expires', '0');
+		$this->setHeader('Cache-Control', 'must-revalidate');
+		$this->setHeader('Pragma', 'public');
+
+		// Define file size
+		$this->setHeader('Content-Length', strval(filesize($filePath)));
+
+		// Set status code
+		$this->setStatus(200);
+
+		$this->fileData = [
+			"fileName" => $fileName,
+			"filePath" => $filePath,
+		];
 
 		$this->end();
 	}

@@ -366,8 +366,8 @@ class Response
 			// Range start and end are inclusive
 			// If every range is invalid send entire file
 			// Range start from 0
-			// If a range end with "{value}-" replace with "{value}-{fileLength - 1}"
-			// If a range start with "-{value}" replace with "{fileLength - value - 1}-{fileLength - 1}"
+			// If range end with "{value}-" replace with "{value}-{fileLength - 1}"
+			// If range start with "-{value}" replace with "{fileLength - value - 1}-{fileLength - 1}"
 			// Send "Accept-Ranges: bytes" header
 			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests
 			// If multiple ranges are present send header "Content-Type: multipart/byteranges; boundary={bounaryString}" bounaryString is not specified by rfc

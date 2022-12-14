@@ -2,6 +2,7 @@
 
 namespace Internal\Http;
 
+use Exception;
 use Internal\Routes\Utils as RoutesUtils;
 
 class Request
@@ -59,11 +60,8 @@ class Request
 	 */
 	public array $data;
 
-	function __construct(object $params)
+	function __construct()
 	{
-		// Path params
-		$this->params = $params;
-
 		// Headers
 		$this->headers = Utils::GetHeaders();
 
@@ -84,6 +82,18 @@ class Request
 
 		// IP address
 		$this->ip = $_SERVER['REMOTE_ADDR'];
+	}
+
+	/**
+	 * Internal use only
+	 * 
+	 * Set path params
+	 */
+	public function setParams(object $params): self
+	{
+		$this->params = $params;
+
+		return $this;
 	}
 
 	/**

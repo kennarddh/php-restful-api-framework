@@ -25,6 +25,6 @@ class Auth extends BaseMiddleware
 	{
 		$newBody = array_merge($this->response->body(), ['code' => $this->response->status()]);
 
-		$this->response->json($newBody);
+		$this->response->setBody($newBody);
 	}
 }

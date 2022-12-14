@@ -6,9 +6,7 @@ use Closure;
 use Common\OutputBuffer;
 use Exception;
 use Internal\Controllers\ResolveController;
-use Internal\Http\Request;
-use Internal\Http\Response;
-use stdClass;
+use Internal\Http\Singleton;
 
 /**
  * All routes must to extend BaseRoutes
@@ -69,6 +67,10 @@ class BaseRoutes
 			$file = $error['file'];
 			$line = $error['line'];
 
+			// Set end to false
+			Singleton::GetResponse()->cancelEnd();
+
+			// Clear body
 			OutputBuffer::clear();
 
 			($this->errorHandler)(
@@ -257,9 +259,8 @@ class BaseRoutes
 
 		$handlerName = ResolveController::ResolveComputed($handler);
 
-		$request = new Request(new stdClass);
-		$response = new Response(function () {
-		});
+		$request = Singleton::GetRequest();
+		$response = Singleton::GetResponse();
 
 		$handlerInstance = new $handlerName($request, $response);
 

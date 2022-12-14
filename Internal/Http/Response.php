@@ -61,9 +61,28 @@ class Response
 	 */
 	protected Closure $afterMiddleware;
 
-	function __construct(Closure $afterMiddleware)
+	/**
+	 * Internal use only
+	 * 
+	 * Set ended to false
+	 */
+	public function cancelEnd(): self
+	{
+		$this->ended = false;
+
+		return $this;
+	}
+
+	/**
+	 * Internal use only
+	 * 
+	 * Set after middleware
+	 */
+	public function setAfterMiddleware(Closure $afterMiddleware): self
 	{
 		$this->afterMiddleware = $afterMiddleware;
+
+		return $this;
 	}
 
 	/**
@@ -329,12 +348,14 @@ class Response
 		$this->flushHeaders();
 		$this->flushCookies();
 
-		$this->flush();
 
 		if (!empty($this->body)) {
 			// Send body
 			$this->flushBody();
 		} else {
+			// Flush header, status, and cookie before sending file chunk
+			$this->flush();
+
 			// Send file
 			// Disable timeout
 			set_time_limit(0);

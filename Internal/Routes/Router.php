@@ -8,6 +8,7 @@ use Internal\Http\Request;
 use Internal\Http\Response;
 use Internal\Middlewares\ResolveMiddleware;
 use Application\Routes\Routes;
+use Internal\Http\Singleton;
 
 /**
  * Main router
@@ -34,8 +35,8 @@ class Router
 			) {
 				// If url match with one of user defined paths in routes call defined controller method
 
-				$request = new Request($params);
-				$response = new Response(function (Response $response) use ($request, $route) {
+				$request = Singleton::GetRequest()->setParams($params);
+				$response = Singleton::GetResponse()->setAfterMiddleware(function (Response $response) use ($request, $route) {
 					// Run all after middleware sequentially
 					foreach ($route->middlewares->after as $middleware) {
 						$middlewareFunctionName = ResolveMiddleware::ResolveFunctionName($middleware);
@@ -56,7 +57,7 @@ class Router
 					}
 				});
 
-				// Run all after middleware sequentially
+				// Run all bedore middleware sequentially
 				foreach ($route->middlewares->before as $middleware) {
 					$middlewareFunctionName = ResolveMiddleware::ResolveFunctionName($middleware);
 

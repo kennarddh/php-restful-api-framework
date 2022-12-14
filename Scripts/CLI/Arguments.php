@@ -73,7 +73,7 @@ class Arguments
 				$namedRemovedPrefix = substr($value, 1);
 
 				if (str_contains($namedRemovedPrefix, '=')) {
-					throw new InvalidArgumentException('Single dash argument cannot contain = character');
+					throw new InvalidArgumentException('Single hyphen (-) argument cannot contain = character');
 
 					return;
 				}
@@ -91,11 +91,11 @@ class Arguments
 
 				// Cannot have empty single dash
 				if ($namedRemovedPrefix === '')
-					throw new InvalidArgumentException('Single dash option empty');
+					throw new InvalidArgumentException('Single hyphen (-) option empty');
 
 				// Cannot contain - character
 				if (str_contains($namedRemovedPrefix, '-'))
-					throw new InvalidArgumentException('Single dash option argument cannot contain - character');
+					throw new InvalidArgumentException('Single hyphen (-) option argument cannot contain - character');
 
 				// Set as multiple options for every charcter
 				foreach (str_split($namedRemovedPrefix) as $char) {

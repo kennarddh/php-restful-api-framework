@@ -356,36 +356,6 @@ class Response
 				// sleep(1);
 			}
 
-			// https://www.media-division.com/the-right-way-to-handle-file-downloads-in-php/ (tutorial)
-			// https://datatracker.ietf.org/doc/html/draft-ietf-http-range-retrieval-00 (obsolete)
-			// https://www.rfc-editor.org/rfc/rfc9110.html (active)
-			// Range header format "Range: {rangeUnit: bytes}={range: {rangeStart}-{rangeEnd}}" multiple range separated with comma 
-			// Send 200 status if no range header is present, send 206 if no error and range header is present, send 416 if all range is invalid
-			// If only 1 range is present send content range in header 
-			// If range start if bigger than end ignore range
-			// Range start and end are inclusive
-			// If every range is invalid send entire file
-			// Range start from 0
-			// If range end with "{value}-" replace with "{value}-{fileLength - 1}"
-			// If range start with "-{value}" replace with "{fileLength - value - 1}-{fileLength - 1}"
-			// Send "Accept-Ranges: bytes" header
-			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests
-			// If multiple ranges are present send header "Content-Type: multipart/byteranges; boundary={bounaryString}" bounaryString is not specified by rfc
-			// If multiple ranges are present send secondary header in body separated by "--{bounaryString}"
-			/* example with 2 ranges body
-			--{bounaryString}
-			Content-Type: {contentTypeForXRange}
-			Content-Range: bytes {startRange}-{endRange}/{fileLength}
-
-			{content}
-			--{bounaryString}
-			Content-Type: {contentTypeForXRange}
-			Content-Range: bytes {startRange}-{endRange}/{fileLength}
-
-			{content}
-			--{bounaryString}
-			*/
-
 			/* close connection in while loop
 			if (connection_status()!=0) 
 			{

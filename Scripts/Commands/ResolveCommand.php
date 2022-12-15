@@ -2,7 +2,6 @@
 
 namespace Scripts\Commands;
 
-use Exception;
 use InvalidArgumentException;
 use Scripts\CLI\CLI;
 

@@ -39,7 +39,7 @@ class CLI
 	 */
 	public function write(string $text, array | null $formatTypes = null)
 	{
-		if ($formatTypes === null || empty($formatTypes)) $formatTypes = [TextFormatter::$DEFAULT_FOREGROUND];
+		if ($formatTypes === null || empty($formatTypes)) $formatTypes = [TextFormatter::DEFAULT_FOREGROUND];
 
 		fwrite($this->output, TextFormatter::Format($text, $formatTypes));
 	}
@@ -57,7 +57,7 @@ class CLI
 	 */
 	public function writeError(string $text)
 	{
-		fwrite($this->error, TextFormatter::Format($text, [TextFormatter::$RED_FOREGROUND]));
+		fwrite($this->error, TextFormatter::Format($text, [TextFormatter::RED_FOREGROUND]));
 	}
 
 	/**

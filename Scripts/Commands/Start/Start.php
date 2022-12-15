@@ -43,7 +43,7 @@ class Start extends BaseCommand
 		// Mimic Apache's mod_rewrite functionality
 		$router = escapeshellarg(__DIR__ . DIRECTORY_SEPARATOR . 'Router.php');
 
-		$this->cli->writeLine('Development server started on http://' . $host . ':' . $port, [TextFormatter::$GREEN_FOREGROUND]);
+		$this->cli->writeLine('Development server started on http://' . $host . ':' . $port, [TextFormatter::GREEN_FOREGROUND]);
 
 		// Escape host
 		$host = escapeshellarg($host);

@@ -509,8 +509,10 @@ class Response
 
 	/**
 	 * Send file
+	 * 
+	 * @param bool $strict Default false. If strict set to true will response with 416 if range invalid, otherwise will skip invalid range
 	 */
-	public function sendFile(string $fileName, string $filePath)
+	public function sendFile(string $fileName, string $filePath, bool $strict = false)
 	{
 		if ($this->isAfterMiddleware) {
 			throw new Exception('Cannot send file in after middleware');
@@ -535,26 +537,13 @@ class Response
 		$ranges = [];
 		$boundaryString = '3d6b6a416f9b5'; // (CAN_ENV)
 
-		if ($request->header('Range') !== null) {
-			// Parse range
-			$rawRange = trim($request->header('Range'));
+		$ranges = Utils::ParseRangeHeader($request->header('Range'), $fileSize, ['strict' => $strict], function () {
+			$this->setStatus(416);
 
-			if (!preg_match('/^bytes=((\d+-\d+,?)|(\d+-,?)|(-\d+,?))+$/', $rawRange) || str_ends_with($rawRange, ',')) {
-				// Invalid
-				$this->setStatus(416);
+			$this->end();
+		});
 
-				$this->end();
-
-				return;
-			}
-
-			[, $rawRanges] = explode('=', $rawRange);
-
-			$ranges = Utils::ParseRangeHeader($rawRanges, $fileSize);
-		} else {
-			// Entire document
-			$ranges = [];
-		}
+		if ($this->ended()) return;
 
 		// Get file content type
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -610,7 +599,7 @@ class Response
 			"fileSize" => $fileSize,
 			"ranges" => $ranges,
 			"boundaryString" => $boundaryString,
-			"mime" => $mime
+			"mime" => $mime,
 		];
 
 		$this->end();

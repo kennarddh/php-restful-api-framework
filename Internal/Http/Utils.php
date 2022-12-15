@@ -2,6 +2,10 @@
 
 namespace Internal\Http;
 
+use Closure;
+use Error;
+use Exception;
+
 class Utils
 {
 	/**
@@ -77,51 +81,73 @@ class Utils
 	 * 
 	 * Parse range header
 	 */
-	public static function ParseRangeHeader(string $rawRanges,int $fileSize): array
+	public static function ParseRangeHeader(string | null $range, int $fileSize, array $options, Closure $endError): array
 	{
 		$ranges = [];
 
-		$rangesArray = explode(',', $rawRanges);
+		if ($range !== null) {
+			// Parse range
+			$rawRange = trim($range);
 
-		// Check end is bigger than start
-		foreach ($rangesArray as $rangeValue) {
-			$rangeStart = 0;
-			$rangeEnd = 0;
+			if (!preg_match('/^bytes=((\d+-\d+,?)|(\d+-,?)|(-\d+,?))+$/', $rawRange) || str_ends_with($rawRange, ',')) {
+				// Invalid
 
-			$trimmed = trim($rangeValue);
+				($endError)();
 
-			if (preg_match('/^-\d+$/', $trimmed)) {
-				[, $rangeEnd] = explode('-', $trimmed);
-
-				$rangeEnd = (int) $rangeEnd;
-
-				$rangeStart = $fileSize - $rangeEnd;
-				$rangeEnd = $fileSize - 1;
-			} else if (preg_match('/^\d+-$/', $trimmed)) {
-				[$rangeStart] = explode('-', $trimmed);
-
-				$rangeStart = (int) $rangeStart;
-
-				$rangeEnd = $fileSize - 1;
-			} else {
-				[$rangeStart, $rangeEnd] = explode('-', $trimmed);
-
-				$rangeEnd = (int) $rangeEnd;
-				$rangeStart = (int) $rangeStart;
+				return $ranges;
 			}
 
-			if (
-				$rangeStart > $rangeEnd ||
-				$rangeStart > 0 ||
-				$rangeEnd > 0 ||
-				$rangeStart > $fileSize ||
-				$rangeEnd >= $fileSize
-			) {
-				// Ignore range if range is invalid
-				continue;
-			}
+			[, $rawRanges] = explode('=', $rawRange);
 
-			array_push($ranges, ['start' => $rangeStart, 'end' => $rangeEnd]);
+			$rangesArray = explode(',', $rawRanges);
+
+			// Check end is bigger than start
+			foreach ($rangesArray as $rangeValue) {
+				$rangeStart = 0;
+				$rangeEnd = 0;
+
+				$trimmed = trim($rangeValue);
+
+				if (preg_match('/^-\d+$/', $trimmed)) {
+					[, $rangeEnd] = explode('-', $trimmed);
+
+					$rangeEnd = (int) $rangeEnd;
+
+					$rangeStart = $fileSize - $rangeEnd;
+					$rangeEnd = $fileSize - 1;
+				} else if (preg_match('/^\d+-$/', $trimmed)) {
+					[$rangeStart] = explode('-', $trimmed);
+
+					$rangeStart = (int) $rangeStart;
+
+					$rangeEnd = $fileSize - 1;
+				} else {
+					[$rangeStart, $rangeEnd] = explode('-', $trimmed);
+
+					$rangeEnd = (int) $rangeEnd;
+					$rangeStart = (int) $rangeStart;
+				}
+
+				if (
+					$rangeStart > $rangeEnd ||
+					$rangeStart < 0 ||
+					$rangeEnd < 0 ||
+					$rangeStart > $fileSize ||
+					$rangeEnd >= $fileSize
+				) {
+					// Ignore if range is invalid
+					if ($options['strict']) {
+						($endError)();
+					}
+
+					continue;
+				}
+
+				array_push($ranges, ['start' => $rangeStart, 'end' => $rangeEnd]);
+			}
+		} else {
+			// Entire document
+			$ranges = [];
 		}
 
 		return $ranges;

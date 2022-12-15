@@ -80,8 +80,8 @@ final class Home extends BaseController
 
 	public function file()
 	{
-		$filePath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Public'. DIRECTORY_SEPARATOR . 'text.txt';
+		$filePath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Public' . DIRECTORY_SEPARATOR . 'DownloadImage.png';
 
-		$this->response->sendFile('text.txt', $filePath);
+		$this->response->sendFile('DownloadImage.png', $filePath, true);
 	}
 }

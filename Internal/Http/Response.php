@@ -5,7 +5,6 @@ namespace Internal\Http;
 use Closure;
 use Common\OutputBuffer;
 use Exception;
-use Scripts\CLI\CLI;
 
 class Response
 {

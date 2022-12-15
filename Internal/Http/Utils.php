@@ -3,8 +3,6 @@
 namespace Internal\Http;
 
 use Closure;
-use Error;
-use Exception;
 
 class Utils
 {

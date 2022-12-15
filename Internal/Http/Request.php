@@ -2,7 +2,6 @@
 
 namespace Internal\Http;
 
-use Exception;
 use Internal\Routes\Utils as RoutesUtils;
 
 class Request

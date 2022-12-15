@@ -14,7 +14,7 @@
 -   [ ] Docs
 -   [ ] Semantic Versioning
 -   [x] Send File
--   [ ] Send File Range
+-   [x] Send File Range
 -   [ ] Testing
 -   [ ] Base Url Config
 -   [x] Start Command

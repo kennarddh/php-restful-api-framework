@@ -77,4 +77,4 @@
 -   Range start and end are inclusive
 -   Range start from 0, 0 is first character in content
 -   If range end with "{value}-" replace with "{value}-{fileLength - 1}"
--   If range start with "-{value}" replace with "{fileLength - value - 1}-{fileLength - 1}"
+-   If range start with "-{value}" replace with "{fileLength - value}-{fileLength - 1}"

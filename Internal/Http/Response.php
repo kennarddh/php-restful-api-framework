@@ -5,6 +5,7 @@ namespace Internal\Http;
 use Closure;
 use Common\OutputBuffer;
 use Exception;
+use Scripts\CLI\CLI;
 
 class Response
 {
@@ -34,7 +35,7 @@ class Response
 	 * 
 	 * Use json method to set and body method to get
 	 */
-	protected array $body = [];
+	protected array $body;
 
 	/**
 	 * Internal use only
@@ -60,6 +61,13 @@ class Response
 	 * After middleware closure
 	 */
 	protected Closure $afterMiddleware;
+
+	/**
+	 * Internal use only
+	 * 
+	 * File data
+	 */
+	protected array $fileData;
 
 	/**
 	 * Internal use only
@@ -304,6 +312,8 @@ class Response
 	}
 
 	/**
+	 * Internal use only
+	 * 
 	 * Call php flush
 	 */
 	public function flush()
@@ -348,44 +358,123 @@ class Response
 		$this->flushHeaders();
 		$this->flushCookies();
 
-
-		if (!empty($this->body)) {
+		if (isset($this->body)) {
 			// Send body
 			$this->flushBody();
-		} else {
-			// Flush header, status, and cookie before sending file chunk
-			$this->flush();
+		} else if (isset($this->fileData)) {
+			$this->sendFileChunk();
+		}
 
-			// Send file
-			// Disable timeout
-			set_time_limit(0);
+		$this->ended = true;
+	}
 
-			$file = fopen($this->fileData['filePath'], "rb");
+	/**
+	 * Internal use only
+	 * 
+	 * Send file chunk
+	 */
+	private function sendFileChunk()
+	{
+		// Flush header, status, and cookie before sending file chunk
+		$this->flush();
+
+		// Send file
+		// Disable timeout
+		set_time_limit(0);
+
+		$ranges = $this->fileData['ranges'];
+
+		$file = fopen($this->fileData['filePath'], "rb");
+
+		// 1 chunk 8 kilobytes
+		$oneChunkSize = 1024 * 8;
+
+		if (count($ranges) === 0) {
+			// No range or all range invalid
 
 			while (!feof($file)) {
-				// 1 chunk 8 kilobytes
-				$fileChunk = fread($file, 1024 * 8);
+				$fileChunk = fread($file, $oneChunkSize);
+
+				echo $fileChunk;
+
+				$this->flush();
+			}
+		} else if (count($ranges) === 1) {
+			// 1 range
+
+			fseek($file, $ranges[0]['start']);
+
+			$dataLength = $ranges[0]['end'] - $ranges[0]['start'] + 1;
+
+			$sentBytes = 0;
+
+			while ($sentBytes !== $dataLength) {
+				$chunkSize = 0;
+
+				if ($oneChunkSize > $dataLength - $sentBytes + 1) {
+					$chunkSize = $dataLength - $sentBytes;
+				} else {
+					$chunkSize = $oneChunkSize;
+				}
+
+				$fileChunk = fread($file, $chunkSize);
 
 				echo $fileChunk;
 
 				$this->flush();
 
-				// // 0.1 megabyte
-				// if (ftell($file) > 1024 * 1024 / 10)
-				// 	throw new Exception('asafgsag');
+				$sentBytes += $chunkSize;
+			}
+		} else {
+			// More than 1 range / multiple range
 
-				// sleep(1);
+			$boundaryString = $this->fileData['boundaryString'];
+			$index = -1;
+
+			foreach ($ranges as $range) {
+				$index += 1;
+
+				// Add body header
+				echo "--$boundaryString" . PHP_EOL;
+				echo "Content-Type: " . $this->fileData['mime'] . PHP_EOL;
+				echo "Content-Range: bytes " . $range['start'] . '-' . $range['end'] . '/' . $this->fileData['fileSize'] . PHP_EOL;
+				echo PHP_EOL;
+
+				// Move pointer to range start
+				fseek($file, $range['start']);
+
+				$dataLength = $range['end'] - $range['start'] + 1;
+
+				$sentBytes = 0;
+
+				while ($sentBytes !== $dataLength) {
+					$chunkSize = 0;
+
+					if ($oneChunkSize > $dataLength - $sentBytes + 1) {
+						$chunkSize = $dataLength - $sentBytes;
+					} else {
+						$chunkSize = $oneChunkSize;
+					}
+
+					$fileChunk = fread($file, $chunkSize);
+
+					echo $fileChunk;
+
+					$this->flush();
+
+					$sentBytes += $chunkSize;
+				}
+
+				if (count($ranges) !== $index + 1) {
+					echo PHP_EOL;
+				}
 			}
 
-			/* close connection in while loop
-			if (connection_status()!=0) 
-			{
-				fclose($file);
-			}	
-			*/
+			echo PHP_EOL;
+			echo "--$boundaryString";
 		}
 
-		$this->ended = true;
+		fclose($file);
 	}
 
 	/**
@@ -439,12 +528,71 @@ class Response
 			return;
 		}
 
-		// Set file content type
-		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$request = Singleton::GetRequest();
 
+		$fileSize = filesize($filePath);
+
+		$ranges = [];
+		$boundaryString = '3d6b6a416f9b5'; // (CAN_ENV)
+
+		if ($request->header('Range') !== null) {
+			// Parse range
+			$rawRange = trim($request->header('Range'));
+
+			if (!preg_match('/^bytes=((\d+-\d+,?)|(\d+-,?)|(-\d+,?))+$/', $rawRange) || str_ends_with($rawRange, ',')) {
+				// Invalid
+				$this->setStatus(416);
+
+				$this->end();
+
+				return;
+			}
+
+			[, $rawRanges] = explode('=', $rawRange);
+
+			$ranges = Utils::ParseRangeHeader($rawRanges, $fileSize);
+		} else {
+			// Entire document
+			$ranges = [];
+		}
+
+		// Get file content type
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$mime = finfo_file($finfo, $filePath);
-		$this->setHeader('Content-Type', $mime);
 		finfo_close($finfo);
+
+		if (count($ranges) === 0) {
+			// No range or all range invalid
+
+			// Set status code
+			$this->setStatus(200);
+
+			$this->setHeader('Content-Type', $mime);
+
+			// Define file size
+			$this->setHeader('Content-Length', $fileSize);
+		} else if (count($ranges) === 1) {
+			// 1 range
+
+			$this->setHeader('Content-Type', $mime);
+
+			$rangeStart = $ranges[0]['start'];
+			$rangeEnd = $ranges[0]['end'];
+
+			// Define file size
+			$this->setHeader('Content-Length', $rangeEnd - $rangeStart + 1);
+			$this->setHeader('Content-Range', "bytes $rangeStart-$rangeEnd/$fileSize");
+
+			// Set status code
+			$this->setStatus(206);
+		} else {
+			// More than 1 range / multiple range
+
+			// Set status code
+			$this->setStatus(206);
+
+			$this->setHeader('Content-Type', $mime);
+		}
 
 		$this->setHeader('Content-Disposition', "attachment; filename=$fileName");
 
@@ -453,15 +601,16 @@ class Response
 		$this->setHeader('Cache-Control', 'must-revalidate');
 		$this->setHeader('Pragma', 'public');
 
-		// Define file size
-		$this->setHeader('Content-Length', strval(filesize($filePath)));
-
-		// Set status code
-		$this->setStatus(200);
+		// Accept range in bytes
+		$this->setHeader('Accept-Ranges', 'bytes');
 
 		$this->fileData = [
 			"fileName" => $fileName,
 			"filePath" => $filePath,
+			"fileSize" => $fileSize,
+			"ranges" => $ranges,
+			"boundaryString" => $boundaryString,
+			"mime" => $mime
 		];
 
 		$this->end();

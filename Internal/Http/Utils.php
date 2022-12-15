@@ -71,4 +71,59 @@ class Utils
 
 		return false;
 	}
+
+	/**
+	 * Intenal use only
+	 * 
+	 * Parse range header
+	 */
+	public static function ParseRangeHeader(string $rawRanges,int $fileSize): array
+	{
+		$ranges = [];
+
+		$rangesArray = explode(',', $rawRanges);
+
+		// Check end is bigger than start
+		foreach ($rangesArray as $rangeValue) {
+			$rangeStart = 0;
+			$rangeEnd = 0;
+
+			$trimmed = trim($rangeValue);
+
+			if (preg_match('/^-\d+$/', $trimmed)) {
+				[, $rangeEnd] = explode('-', $trimmed);
+
+				$rangeEnd = (int) $rangeEnd;
+
+				$rangeStart = $fileSize - $rangeEnd;
+				$rangeEnd = $fileSize - 1;
+			} else if (preg_match('/^\d+-$/', $trimmed)) {
+				[$rangeStart] = explode('-', $trimmed);
+
+				$rangeStart = (int) $rangeStart;
+
+				$rangeEnd = $fileSize - 1;
+			} else {
+				[$rangeStart, $rangeEnd] = explode('-', $trimmed);
+
+				$rangeEnd = (int) $rangeEnd;
+				$rangeStart = (int) $rangeStart;
+			}
+
+			if (
+				$rangeStart > $rangeEnd ||
+				$rangeStart > 0 ||
+				$rangeEnd > 0 ||
+				$rangeStart > $fileSize ||
+				$rangeEnd >= $fileSize
+			) {
+				// Ignore range if range is invalid
+				continue;
+			}
+
+			array_push($ranges, ['start' => $rangeStart, 'end' => $rangeEnd]);
+		}
+
+		return $ranges;
+	}
 }

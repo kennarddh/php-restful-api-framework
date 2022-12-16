@@ -22,10 +22,17 @@ class Logger
 	 */
 	protected static array $levels = ['error', 'warning', 'info', 'verbose', 'debug', 'internal'];
 
+	public static function AddTransports(array ...$transports): self
+	{
+		self::$transports = array_merge(self::$transports, $transports);
+
+		return new static;
+	}
+
 	/**
 	 * Log message to transports
 	 */
-	public static function log(string $level, string $message)
+	public static function Log(string $level, string $message)
 	{
 		if (!in_array($level, self::$levels)) {
 			throw new Exception("Level $level doesn't exist in logger levels");

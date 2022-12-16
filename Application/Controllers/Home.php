@@ -4,6 +4,7 @@ namespace Application\Controllers;
 
 use Exception;
 use Internal\Controllers\BaseController;
+use Internal\Logger\Logger;
 
 final class Home extends BaseController
 {
@@ -83,5 +84,10 @@ final class Home extends BaseController
 		$filePath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Public' . DIRECTORY_SEPARATOR . 'DownloadImage.png';
 
 		$this->response->sendFile('DownloadImage.png', $filePath, true);
+	}
+
+	public function logInfo()
+	{
+		Logger::Log('info', 'Test info log');
 	}
 }

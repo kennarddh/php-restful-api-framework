@@ -3,6 +3,7 @@
 namespace Internal\Logger;
 
 use Exception;
+use Internal\Logger\Transports\BaseTransport;
 
 class Logger
 {
@@ -11,7 +12,7 @@ class Logger
 	 * 
 	 * Array of transports
 	 */
-	protected static array $transports;
+	protected static array $transports = [];
 
 	/**
 	 * Internal use only
@@ -22,9 +23,9 @@ class Logger
 	 */
 	protected static array $levels = ['error', 'warning', 'info', 'verbose', 'debug', 'internal'];
 
-	public static function AddTransports(array ...$transports): self
+	public static function AddTransports(BaseTransport $transport): self
 	{
-		self::$transports = array_merge(self::$transports, $transports);
+		array_push(self::$transports, $transport);
 
 		return new static;
 	}

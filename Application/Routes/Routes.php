@@ -18,6 +18,8 @@ class Routes extends BaseRoutes
 
 		$this->get('file', 'Home::file');
 
+		$this->get('logInfo', 'Home::logInfo');
+
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');
 		$this->get(':id', 'Home::index');

@@ -9,23 +9,23 @@ abstract class BaseTransport {
 	/**
 	 * Is transport silent
 	 */
-	protected bool $silent = false;
+	public bool $silent = false;
 
 	/**
 	 * Array of levels
 	 * 
 	 * If log level is in accept levels log will be forwarded to this transport
 	 */
-	protected array $acceptLevels;
+	public array $acceptLevels;
 
 	/**
 	 * This method is called when a new log level is in the accept levels array and transport is not silent
 	 */
-	abstract protected function log(string $level, string $message);
+	abstract public function log(string $level, string $message);
 
-	public function __construct(array $options)
+	public function __construct(array $options = [])
 	{
-		$this->silent = $options['silent'];
-		$this->acceptLevels = $options['acceptLevels'];
+		$this->silent = $options['silent'] ?? false;
+		$this->acceptLevels = $options['acceptLevels'] ?? [];
 	}
 }

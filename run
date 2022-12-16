@@ -13,8 +13,11 @@ include './Common/AutoLoader.php';
 use Common\Autoloader;
 use Scripts\Commands\ResolveCommand;
 use Scripts\Commands\Start\Start;
+use Scripts\Console\ConsoleSingleton;
 
 AutoLoader::Register();
+
+ConsoleSingleton::RegisterConsole($argv, STDOUT, STDERR);
 
 $avaliableCommands = [
 	Start::class

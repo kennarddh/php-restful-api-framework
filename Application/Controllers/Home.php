@@ -90,4 +90,9 @@ final class Home extends BaseController
 	{
 		Logger::Log('info', 'Test info log');
 	}
+
+	public function logError()
+	{
+		Logger::Log('error', 'Test error log');
+	}
 }

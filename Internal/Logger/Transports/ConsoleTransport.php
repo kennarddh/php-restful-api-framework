@@ -2,14 +2,15 @@
 
 namespace Internal\Logger\Transports;
 
-use Scripts\Console\ConsoleSingleton;
-
 class ConsoleTransport extends BaseTransport
 {
 	public function log(string $level, string $message)
 	{
-		$date = date('m/d/Y h:i:s a', time());
+		$date = date('D M j G:i:s Y', time());
 
-		ConsoleSingleton::GetConsole()->writeLine("[$date] $level: $message");
+		if ($level === 'error')
+			file_put_contents("php://stderr", "[$date] [$level]: $message" . PHP_EOL);
+		else
+			file_put_contents("php://stdout", "[$date] [$level]: $message" . PHP_EOL);
 	}
 }

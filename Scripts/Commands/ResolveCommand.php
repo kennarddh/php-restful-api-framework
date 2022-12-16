@@ -3,17 +3,10 @@
 namespace Scripts\Commands;
 
 use InvalidArgumentException;
-use Scripts\CLI\CLI;
+use Scripts\Console\ConsoleSingleton;
 
 class ResolveCommand
 {
-	/**
-	 * Internal use only
-	 * 
-	 * Used for reference to current cli instance
-	 */
-	public CLI $cli;
-
 	/**
 	 * Array of commands
 	 */
@@ -21,13 +14,9 @@ class ResolveCommand
 
 	/** 
 	 * Internal use only
-	 * 
-	 * Inject cli instance to command
 	 */
-	public function __construct(CLI $cli, array $availableCommands)
+	public function __construct(array $availableCommands)
 	{
-		$this->cli = $cli;
-
 		$this->availableCommands = $availableCommands;
 	}
 
@@ -38,24 +27,26 @@ class ResolveCommand
 	 */
 	public function resolve()
 	{
-		if (!isset($this->cli->arguments->arguments[0])) {
+		$console = ConsoleSingleton::GetConsole();
+
+		if (!isset($console->arguments->arguments[0])) {
 			throw new InvalidArgumentException('Command name is required');
 
 			return;
 		}
 
-		$commandName = $this->cli->arguments->arguments[0];
+		$commandName = $console->arguments->arguments[0];
 
 		foreach ($this->availableCommands as $command) {
 			if ($command::$name === $commandName) {
-				$commandInstance = new $command($this->cli);
-				
+				$commandInstance = new $command($console);
+
 				$commandInstance->execute();
 
 				return;
 			}
 		}
 
-		$this->cli->writeErrorLine("No command named $commandName");
+		$console->writeErrorLine("No command named $commandName");
 	}
 }

@@ -11,7 +11,6 @@ define('PATH_FROM_INDEX_TO_APPLICATION', __DIR__ . DIRECTORY_SEPARATOR . '.' . D
 include './Common/AutoLoader.php';
 
 use Common\Autoloader;
-use Scripts\CLI\CLI;
 use Scripts\Commands\ResolveCommand;
 use Scripts\Commands\Start\Start;
 
@@ -21,8 +20,6 @@ $avaliableCommands = [
 	Start::class
 ];
 
-$cli = new CLI($argv);
-
-$resolver = new ResolveCommand($cli, $avaliableCommands);
+$resolver = new ResolveCommand($avaliableCommands);
 
 $resolver->resolve();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Scripts\CLI;
+namespace Scripts\Console;
 
 class TextFormatter
 {

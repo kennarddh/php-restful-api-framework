@@ -1,8 +1,8 @@
 <?php
 
-namespace Scripts\CLI;
+namespace Scripts\Console;
 
-class CLI
+class Console
 {
 	/**
 	 * Standard out

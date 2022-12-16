@@ -6,7 +6,7 @@ use Internal\Http\Request;
 use Internal\Http\Response;
 
 /**
- * All middlewares must to extend BaseMiddleware
+ * All middlewares must extend BaseMiddleware
  */
 class BaseMiddleware
 {

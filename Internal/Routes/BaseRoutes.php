@@ -9,7 +9,7 @@ use Internal\Controllers\ResolveController;
 use Internal\Http\Singleton;
 
 /**
- * All routes must to extend BaseRoutes
+ * All routes must extend BaseRoutes
  */
 class BaseRoutes
 {

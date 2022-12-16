@@ -18,11 +18,11 @@ abstract class BaseTransport {
 	 */
 	protected array $acceptLevels;
 
+	/**
+	 * This method is called when a new log level is in the accept levels array and transport is not silent
+	 */
 	abstract protected function log(string $level, string $message);
 
-	/**
-	 * Every transport must call BaseTransport constructor
-	 */
 	public function __construct(array $options)
 	{
 		$this->silent = $options['silent'];

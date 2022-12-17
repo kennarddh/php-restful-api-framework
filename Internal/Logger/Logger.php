@@ -48,7 +48,14 @@ class Logger
 				continue;
 			}
 
-			$transport->log($level, $message);
+			$previousFormatResult = $message;
+
+			// Run all formatters sequentially
+			foreach ($transport->formatters as $formatter) {
+				$previousFormatResult = $formatter->format($level, $message, $previousFormatResult);
+			}
+
+			$transport->log($level, $message, $previousFormatResult);
 		}
 	}
 }

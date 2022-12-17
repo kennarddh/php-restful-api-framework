@@ -10,6 +10,7 @@ define('PATH_FROM_INDEX_TO_APPLICATION', __DIR__ . DIRECTORY_SEPARATOR . '..' . 
 include __DIR__ . DIRECTORY_SEPARATOR . '../Common/AutoLoader.php';
 
 use Common\Autoloader;
+use Internal\Logger\Formatters\StringFormatter;
 use Internal\Logger\Logger;
 use Internal\Logger\Transports\ConsoleTransport;
 use Internal\Routes\Router;
@@ -25,6 +26,9 @@ Logger::AddTransports(
 				'error',
 				'warning',
 				'info'
+			],
+			'formatters' =>[
+				new StringFormatter
 			]
 		]
 	)

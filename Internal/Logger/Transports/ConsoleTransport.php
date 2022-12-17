@@ -4,13 +4,11 @@ namespace Internal\Logger\Transports;
 
 class ConsoleTransport extends BaseTransport
 {
-	public function log(string $level, string $message)
+	public function log(string $level, string $message, string $formatted)
 	{
-		$date = date('D M j G:i:s Y', time());
-
 		if ($level === 'error')
-			file_put_contents("php://stderr", "[$date] [$level]: $message" . PHP_EOL);
+			file_put_contents("php://stderr", $formatted . PHP_EOL);
 		else
-			file_put_contents("php://stdout", "[$date] [$level]: $message" . PHP_EOL);
+			file_put_contents("php://stdout", $formatted . PHP_EOL);
 	}
 }

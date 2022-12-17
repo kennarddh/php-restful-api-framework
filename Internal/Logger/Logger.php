@@ -33,7 +33,7 @@ class Logger
 	/**
 	 * Log message to transports
 	 */
-	public static function Log(string $level, string $message)
+	public static function Log(string $level, string $message, array $data = []): void
 	{
 		if (!in_array($level, self::$levels)) {
 			throw new Exception("Level $level doesn't exist in logger levels");
@@ -49,13 +49,14 @@ class Logger
 			}
 
 			$previousFormatResult = $message;
+			$modifiedData = $data;
 
 			// Run all formatters sequentially
 			foreach ($transport->formatters as $formatter) {
-				$previousFormatResult = $formatter->format($level, $message, $previousFormatResult);
+				$previousFormatResult = $formatter->format($level, $message, $modifiedData, $previousFormatResult);
 			}
 
-			$transport->log($level, $message, $previousFormatResult);
+			$transport->log($level, $message, $modifiedData, $previousFormatResult);
 		}
 	}
 }

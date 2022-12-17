@@ -12,5 +12,5 @@ abstract class BaseFormatter
 	 * 
 	 * Return value from previous formatter is passed to current formatter
 	 */
-	abstract public function format(string $level, string $message, string $previous): string;
+	abstract public function format(string $level, string $message, array $data, string $previous): string;
 }

@@ -51,6 +51,11 @@ class Logger
 			$previousFormatResult = $message;
 			$modifiedData = $data;
 
+			// Run all transformers sequentially
+			foreach ($transport->transformers as $transformer) {
+				$modifiedData = $transformer->transform($level, $message, $data, $modifiedData);
+			}
+
 			// Run all formatters sequentially
 			foreach ($transport->formatters as $formatter) {
 				$previousFormatResult = $formatter->format($level, $message, $modifiedData, $previousFormatResult);

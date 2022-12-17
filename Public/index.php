@@ -12,6 +12,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../Common/AutoLoader.php';
 use Common\Autoloader;
 use Internal\Logger\Formatters\StringFormatter;
 use Internal\Logger\Logger;
+use Internal\Logger\Transformers\LevelInDataTransformer;
+use Internal\Logger\Transformers\MessageInDataTransformer;
 use Internal\Logger\Transports\ConsoleTransport;
 use Internal\Routes\Router;
 
@@ -27,8 +29,12 @@ Logger::AddTransports(
 				'warning',
 				'info'
 			],
-			'formatters' =>[
+			'formatters' => [
 				new StringFormatter
+			],
+			'transformers' => [
+				new LevelInDataTransformer,
+				new MessageInDataTransformer
 			]
 		]
 	)

@@ -20,7 +20,12 @@ abstract class BaseTransport
 	public array $acceptLevels;
 
 	/**
-	 * All level, message, and data are passed to formatters sequentially before passed to transport
+	 * All level, message, and data are passed to transformers sequentially before passed to formatters to transform data
+	 */
+	public array $transformers;
+
+	/**
+	 * All level, message, and data are passed to formatters sequentially before passed to transport to serialize data to string
 	 */
 	public array $formatters;
 
@@ -34,5 +39,6 @@ abstract class BaseTransport
 		$this->silent = $options['silent'] ?? false;
 		$this->acceptLevels = $options['acceptLevels'] ?? [];
 		$this->formatters = $options['formatters'] ?? [];
+		$this->transformers = $options['transformers'] ?? [];
 	}
 }

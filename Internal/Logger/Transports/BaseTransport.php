@@ -27,7 +27,7 @@ abstract class BaseTransport
 	/**
 	 * This method is called when a new log level is in the accept levels array and transport is not silent
 	 */
-	abstract public function log(string $level, string $message, string $formatted);
+	abstract public function log(string $level, string $message, string $formattedMessage): void;
 
 	public function __construct(array $options = [])
 	{

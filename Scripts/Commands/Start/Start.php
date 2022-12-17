@@ -52,6 +52,6 @@ class Start extends BaseCommand
 		$host = escapeshellarg($host);
 
 		// Run php default webserver
-		passthru("$phpBinary -S $host:$port -t $publicFolder $router");
+		passthru("$phpBinary -q -S $host:$port -t $publicFolder $router");
 	}
 }

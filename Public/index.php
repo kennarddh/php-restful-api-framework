@@ -16,7 +16,7 @@ use Application\Configuration\Logger\Configuration as LoggerConfiguration;
 // Register autoloader
 AutoLoader::Register();
 
-// Load config
+// Load configuration
 LoggerConfiguration::Register();
 
 // Register router

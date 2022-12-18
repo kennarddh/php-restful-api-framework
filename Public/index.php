@@ -10,35 +10,14 @@ define('PATH_FROM_INDEX_TO_APPLICATION', __DIR__ . DIRECTORY_SEPARATOR . '..' . 
 include __DIR__ . DIRECTORY_SEPARATOR . '../Common/AutoLoader.php';
 
 use Common\Autoloader;
-use Internal\Logger\Formatters\StringFormatter;
-use Internal\Logger\Logger;
-use Internal\Logger\Transformers\LevelInDataTransformer;
-use Internal\Logger\Transformers\MessageInDataTransformer;
-use Internal\Logger\Transports\ConsoleTransport;
 use Internal\Routes\Router;
+use Application\Configuration\Logger\Configuration as LoggerConfiguration;
 
 // Register autoloader
 AutoLoader::Register();
 
-// Load logger transports
-Logger::AddTransports(
-	new ConsoleTransport(
-		[
-			'acceptLevels' => [
-				'error',
-				'warning',
-				'info'
-			],
-			'formatters' => [
-				new StringFormatter
-			],
-			'transformers' => [
-				new LevelInDataTransformer,
-				new MessageInDataTransformer
-			]
-		]
-	)
-);
+// Load config
+LoggerConfiguration::Register();
 
 // Register router
 Router::Register();

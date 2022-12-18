@@ -22,7 +22,7 @@
 -   [ ] Environtment Variable
 -   [x] Logger
 -   [ ] Rotating File Logger
--   [ ] Logger Config
+-   [x] Logger Config
 
 Search in file `(TODO)` to get all to do in comment
 

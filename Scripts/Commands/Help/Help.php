@@ -29,7 +29,11 @@ class Help extends BaseCommand
 	{
 		$console = ConsoleSingleton::GetConsole();
 
+		$count = 0;
+
 		foreach ($otherCommands as $command) {
+			$count += 1;
+
 			$console->write($command::$name);
 			$console->write("  " . $command::$description);
 
@@ -49,6 +53,9 @@ class Help extends BaseCommand
 			foreach ($command::$arguments as $argumentKey => $argumentValue) {
 				$console->write('    ' . str_pad($argumentKey, $maxLength) . ': ' . $argumentValue);
 			}
+
+			if (count($otherCommands) !== $count)
+				$console->writeEmptyLine();
 		}
 	}
 }

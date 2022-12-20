@@ -48,7 +48,7 @@ class ResolveCommand
 				else if (in_array(NeedOtherCommandsExecuteTrait::class, $usedTraits, true))
 					$command::execute($this->availableCommands);
 				else {
-					$console->writeLine("Command $commandName doesn't use execute trait", [TextFormatter::YELLOW_FOREGROUND]);
+					$console->write("Command $commandName doesn't use execute trait", [TextFormatter::YELLOW_FOREGROUND]);
 
 					return;
 				}
@@ -57,6 +57,6 @@ class ResolveCommand
 			}
 		}
 
-		$console->writeErrorLine("No command named $commandName");
+		$console->writeError("No command named $commandName");
 	}
 }

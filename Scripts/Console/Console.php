@@ -45,11 +45,11 @@ class Console
 	}
 
 	/**
-	 * Write line to output
+	 * Write empty line to output
 	 */
-	public function writeLine(string $text, array|null $formatTypes = null)
+	public function writeEmptyLine()
 	{
-		$this->write($text . PHP_EOL, $formatTypes);
+		$this->write('');
 	}
 
 	/**
@@ -61,15 +61,7 @@ class Console
 	}
 
 	/**
-	 * Write line to error
-	 */
-	public function writeErrorLine(string $text)
-	{
-		$this->writeError($text . PHP_EOL);
-	}
-
-	/**
-	 * Serialize object or array
+	 * Serialize object or array to string
 	 */
 	public static function Serialize(mixed $object)
 	{

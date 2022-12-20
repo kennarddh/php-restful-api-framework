@@ -18,7 +18,7 @@
 -   [ ] Testing
 -   [ ] Base Url Config
 -   [x] Start Command
--   [ ] Help Command
+-   [x] Help Command
 -   [ ] Environtment Variable
 -   [x] Logger
 -   [ ] Rotating File Logger

@@ -4,14 +4,16 @@ namespace Scripts\Commands\Start;
 
 use Scripts\Console\TextFormatter;
 use Scripts\Commands\BaseCommand;
+use Scripts\Commands\Traits\ExecuteTrait;
 use Scripts\Console\ConsoleSingleton;
 
 class Start extends BaseCommand
 {
+	use ExecuteTrait;
+
 	/**
 	 * Command name
 	 */
-
 	public static string $name = 'start';
 
 	/**
@@ -22,16 +24,13 @@ class Start extends BaseCommand
 	/**
 	 * Arguments for help command
 	 */
-	protected $arguments = [
+	public static $arguments = [
 		'--php'  => 'PHP binary (default: "PHP_BINARY")',
 		'--host' => 'HTTP host (default: "localhost")',
 		'--port' => 'HTTP port (default: "8080")',
 	];
 
-	/** 
-	 * Execute
-	 */
-	public function execute()
+	public static function execute()
 	{
 		$console = ConsoleSingleton::GetConsole();
 

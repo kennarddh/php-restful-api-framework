@@ -11,6 +11,7 @@ define('PATH_FROM_INDEX_TO_APPLICATION', __DIR__ . DIRECTORY_SEPARATOR . '.' . D
 include './Common/AutoLoader.php';
 
 use Common\Autoloader;
+use Scripts\Commands\Help\Help;
 use Scripts\Commands\ResolveCommand;
 use Scripts\Commands\Start\Start;
 use Scripts\Console\ConsoleSingleton;
@@ -20,7 +21,8 @@ AutoLoader::Register();
 ConsoleSingleton::RegisterConsole($argv, STDOUT, STDERR);
 
 $avaliableCommands = [
-	Start::class
+	Start::class,
+	Help::class
 ];
 
 $resolver = new ResolveCommand($avaliableCommands);

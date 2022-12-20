@@ -4,6 +4,8 @@ namespace Scripts\Commands;
 
 use InvalidArgumentException;
 use Scripts\Console\ConsoleSingleton;
+use Scripts\Commands\Traits\{ExecuteTrait, NeedOtherCommandsExecuteTrait};
+use Scripts\Console\TextFormatter;
 
 class ResolveCommand
 {
@@ -39,9 +41,17 @@ class ResolveCommand
 
 		foreach ($this->availableCommands as $command) {
 			if ($command::$name === $commandName) {
-				$commandInstance = new $command($console);
+				$usedTraits = (array) class_uses($command);
 
-				$commandInstance->execute();
+				if (in_array(ExecuteTrait::class, $usedTraits, true))
+					$command::execute();
+				else if (in_array(NeedOtherCommandsExecuteTrait::class, $usedTraits, true))
+					$command::execute($this->availableCommands);
+				else {
+					$console->writeLine("Command $commandName doesn't use execute trait", [TextFormatter::YELLOW_FOREGROUND]);
+
+					return;
+				}
 
 				return;
 			}

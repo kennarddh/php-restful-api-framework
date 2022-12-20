@@ -14,8 +14,8 @@ abstract class BaseCommand
 	 */
 	public static string $description;
 
-	/** 
-	 * Execute
+	/**
+	 * Arguments for help command
 	 */
-	abstract public function execute();
+	public static $arguments = [];
 }

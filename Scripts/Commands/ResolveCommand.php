@@ -2,7 +2,6 @@
 
 namespace Scripts\Commands;
 
-use InvalidArgumentException;
 use Scripts\Console\ConsoleSingleton;
 use Scripts\Commands\Traits\{ExecuteTrait, NeedOtherCommandsExecuteTrait};
 use Scripts\Console\TextFormatter;
@@ -32,7 +31,7 @@ class ResolveCommand
 		$console = ConsoleSingleton::GetConsole();
 
 		if (!isset($console->arguments->arguments[0])) {
-			throw new InvalidArgumentException('Command name is required');
+			$console->writeError("Command name is required");
 
 			return;
 		}

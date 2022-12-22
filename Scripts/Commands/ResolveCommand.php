@@ -13,7 +13,7 @@ class ResolveCommand
 	 */
 	public array $availableCommands;
 
-	/** 
+	/**
 	 * Internal use only
 	 */
 	public function __construct(array $availableCommands)
@@ -23,8 +23,6 @@ class ResolveCommand
 
 	/**
 	 * Resolve and run command
-	 * 
-	 * @throws InvalidArgumentException
 	 */
 	public function resolve()
 	{

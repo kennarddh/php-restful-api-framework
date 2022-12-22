@@ -1,0 +1,14 @@
+{
+    "name": "kennarddh/php-restful-api-framework",
+    "description": "Development, Not Stable. PHP Restful Api Framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kennarddh",
+            "email": "79390992+kennarddh@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

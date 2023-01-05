@@ -4,6 +4,7 @@ namespace Application\Controllers;
 
 use Exception;
 use Internal\Controllers\BaseController;
+use Internal\Libraries\Validation;
 use Internal\Logger\Logger;
 
 final class Home extends BaseController
@@ -94,5 +95,20 @@ final class Home extends BaseController
 	public function logError()
 	{
 		Logger::Log('error', 'Test error log');
+	}
+
+	public function validate()
+	{
+		$validation = new Validation($this->request->body, [
+			"age" => ["IsSet", "Bail", "IsNumber"],
+			"name" => ["IsSet", "Bail", "NotNull"]
+		]);
+
+		[$isValid, $errors] = $validation->validate();
+
+		$this->response->send([
+			'isValid' => $isValid,
+			'errors' => $errors
+		], 200);
 	}
 }

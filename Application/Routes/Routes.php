@@ -21,6 +21,8 @@ class Routes extends BaseRoutes
 		$this->get('logInfo', 'Home::logInfo');
 		$this->get('logError', 'Home::logError');
 
+		$this->post('validate', 'Home::validate');
+
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');
 		$this->get(':id', 'Home::index');

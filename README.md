@@ -9,7 +9,8 @@
 -   [ ] Database MongoDB, Mysql
 -   [ ] ORM Transaction, Nested Query, Group By, Order By, Select, Insert, Update, Delete
 -   [ ] Library JWT, File System, Security
--   [ ] Request Validation
+-   [x] Request Validation
+-   [ ] Request Validation Nested Array
 -   [x] Inline Docs
 -   [ ] Docs
 -   [ ] Semantic Versioning

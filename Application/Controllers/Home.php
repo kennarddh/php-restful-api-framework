@@ -101,7 +101,9 @@ final class Home extends BaseController
 	{
 		$validation = new Validation($this->request->body, [
 			"age" => ["IsSet", "Bail", "IsNumber"],
-			"name" => ["IsSet", "Bail", "NotNull"]
+			"name" => ["IsSet", "Bail", "NotNull"],
+			"obj" => ["IsSet", "Bail", "NotNull"],
+			"obj.id" => ["IsSet", "Bail", "NotNull", "Bail", "IsNumber"]
 		]);
 
 		[$isValid, $errors] = $validation->validate();

@@ -34,7 +34,7 @@ class Validation
 	 *
 	 * Validate single prop
 	 */
-	private function validateProp(string $prop, array $rules)
+	private function validateProp(mixed $data, string $prop, array $rules)
 	{
 		$errors = [];
 
@@ -42,20 +42,20 @@ class Validation
 			switch ($rule) {
 				case "Bail": {
 						if (count($errors) >= 1) {
-							return $errors;
+							return [$errors, true];
 						}
 
 						break;
 					}
 				case "NotNull": {
-						if ($this->data->$prop === null) {
+						if ($data === null) {
 							array_push($errors, "$prop must not be null");
 						}
 
 						break;
 					}
 				case "IsSet": {
-						if (!isset($this->data->$prop)) {
+						if (!isset($data)) {
 							array_push($errors, "$prop must be set");
 						}
 
@@ -63,11 +63,11 @@ class Validation
 					}
 				case "IsNumber": {
 						if (!(
-							(is_float($this->data->$prop) ||
-								gettype($this->data->$prop) === "double"
-							) &&
-							(is_numeric($this->data->$prop) ||
-								gettype($this->data->$prop) === "integer"
+							(is_float($data) &&
+								gettype($data) === "double"
+							) ||
+							(is_numeric($data) &&
+								gettype($data) === "integer"
 							)
 						)) {
 							array_push($errors, "$prop must be number");
@@ -78,7 +78,7 @@ class Validation
 			}
 		}
 
-		return $errors;
+		return [$errors, false];
 	}
 
 	/**
@@ -88,8 +88,37 @@ class Validation
 	{
 		$errors = [];
 
+
 		foreach ($this->rules as $prop => $rules) {
-			$errors = array_merge($errors, $this->validateProp($prop, $rules));
+			$data = $this->data;
+
+			if (str_contains($prop, '.')) {
+				$explodedProp = explode('.', $prop);
+
+				foreach ($explodedProp as $singleProp) {
+					if (!isset($data->$singleProp)) {
+						array_push($errors, "$prop must be set");
+						break 2;
+					}
+
+					$data = $data->$singleProp;
+				}
+			} else {
+				if (!isset($this->data->$prop)) {
+					array_push($errors, "$prop must be set");
+					break;
+				}
+
+				$data = $this->data->$prop;
+			}
+
+			[$newErrors, $isBailed] = $this->validateProp($data, $prop, $rules);
+
+			$errors = array_merge($errors, $newErrors);
+
+			if ($isBailed) {
+				break;
+			}
 		}
 
 		return [count($errors) === 0, $errors];

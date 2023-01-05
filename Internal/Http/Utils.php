@@ -8,9 +8,9 @@ class Utils
 {
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * Get Body
-	 * 
+	 *
 	 * From raw json and form data
 	 */
 	public static function GetBody(): object
@@ -21,12 +21,12 @@ class Utils
 		$data = json_decode($json);
 
 		// Merge $_POST for form data and $data for raw json
-		return (object) array_merge((array) $data, $_POST);
+		return json_decode(json_encode(array_merge((array) $data, $_POST)));
 	}
 
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * Get query parameters
 	 */
 	public static function GetQueryParameters(): object
@@ -40,7 +40,7 @@ class Utils
 
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * Get headers
 	 */
 	public static function GetHeaders(): array
@@ -58,7 +58,7 @@ class Utils
 
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * Check is protocol https
 	 */
 	public static function IsSecure()
@@ -76,7 +76,7 @@ class Utils
 
 	/**
 	 * Intenal use only
-	 * 
+	 *
 	 * Parse range header
 	 */
 	public static function ParseRangeHeader(string | null $range, int $fileSize, array $options, Closure $endError): array

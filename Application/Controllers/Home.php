@@ -3,6 +3,7 @@
 namespace Application\Controllers;
 
 use Exception;
+use Internal\Configuration\Configuration;
 use Internal\Controllers\BaseController;
 use Internal\Libraries\Validation;
 use Internal\Logger\Logger;
@@ -122,8 +123,6 @@ final class Home extends BaseController
 
 	public function env()
 	{
-		Logger::Log('info', '', $_ENV);
-
-		$this->response->send($_ENV, 200);
+		$this->response->send(["data" => Configuration::getEnv('ABC')], 200);
 	}
 }

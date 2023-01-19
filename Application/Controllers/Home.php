@@ -67,7 +67,6 @@ final class Home extends BaseController
 
 	public function error()
 	{
-
 		$this->response->send([
 			'error' => 'Internal Server Error',
 		], 500);

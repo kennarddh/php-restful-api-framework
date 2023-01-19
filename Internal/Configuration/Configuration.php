@@ -8,6 +8,8 @@ use Internal\Logger\Logger;
 
 class Configuration
 {
+	public static string $HTTPResponseRangeBoundaryString;
+
 	/**
 	 * Internal use only
 	 *
@@ -22,6 +24,18 @@ class Configuration
 		} catch (Exception) {
 			Logger::Log('warning', 'Env file doesn\'t exist');
 		}
+
+		self::DefaultENV();
+	}
+
+	/**
+	 * Internal use only
+	 *
+	 * Default env
+	 */
+	static public function DefaultENV()
+	{
+		self::$HTTPResponseRangeBoundaryString = self::getEnv('HTTP_RESPONSE_RANGE_BOUNDARY_STRING') ?? '3d6b6a416f9b5';
 	}
 
 	/**

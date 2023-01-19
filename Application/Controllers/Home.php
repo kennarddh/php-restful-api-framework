@@ -64,8 +64,14 @@ final class Home extends BaseController
 		], 200);
 	}
 
-	public function error()
-	{
+	public function error(
+		$type,
+		$message,
+		$file,
+		$line,
+	) {
+		Logger::Log('error', 'Error Occured', ["type" => $type, "message" => $message, "file" => $file, "line" => $line]);
+
 		$this->response->send([
 			'error' => 'Internal Server Error',
 		], 500);
@@ -112,5 +118,12 @@ final class Home extends BaseController
 			'isValid' => $isValid,
 			'errors' => $errors
 		], 200);
+	}
+
+	public function env()
+	{
+		Logger::Log('info', '', $_ENV);
+
+		$this->response->send($_ENV, 200);
 	}
 }

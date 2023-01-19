@@ -15,28 +15,28 @@ class BaseRoutes
 {
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * All paths
 	 */
 	public array $paths = [];
 
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * Current error handler
-	 * 
+	 *
 	 * Can only be set in root route
-	 * 
+	 *
 	 * If set in other routes error handler will be ignored
 	 */
 	public Closure | null $errorHandler = null;
 
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * Is root routes
-	 * 
-	 * Only 1 root route	
+	 *
+	 * Only 1 root route
 	 */
 	protected bool $isRoot = false;
 
@@ -91,7 +91,7 @@ class BaseRoutes
 
 	/**
 	 * Add endpoint
-	 * 
+	 *
 	 * Character * will accept anything including / (slash) character
 	 */
 	public function request(
@@ -113,7 +113,7 @@ class BaseRoutes
 
 	/**
 	 * Add get method endpoint
-	 * 
+	 *
 	 * Character * will accept anything including / (slash) character
 	 */
 	public function get(string $path, string $controller, array $middlewares = []): void
@@ -123,7 +123,7 @@ class BaseRoutes
 
 	/**
 	 * Add post method endpoint
-	 * 
+	 *
 	 * Character * will accept anything including / (slash) character
 	 */
 	public function post(string $path, string $controller, array $middlewares = []): void
@@ -133,7 +133,7 @@ class BaseRoutes
 
 	/**
 	 * Add put method endpoint
-	 * 
+	 *
 	 * Character * will accept anything including / (slash) character
 	 */
 	public function put(string $path, string $controller, array $middlewares = []): void
@@ -143,7 +143,7 @@ class BaseRoutes
 
 	/**
 	 * Add delete method endpoint
-	 * 
+	 *
 	 * Character * will accept anything including / (slash) character
 	 */
 	public function delete(string $path, string $controller, array $middlewares = []): void
@@ -153,7 +153,7 @@ class BaseRoutes
 
 	/**
 	 * Add patch method endpoint
-	 * 
+	 *
 	 * Character * will accept anything including / (slash) character
 	 */
 	public function patch(string $path, string $controller, array $middlewares = []): void
@@ -163,7 +163,7 @@ class BaseRoutes
 
 	/**
 	 * Add all method endpoint
-	 * 
+	 *
 	 * Character * will accept anything including / (slash) character
 	 */
 	public function all(string $path, string $controller, array $middlewares = []): void
@@ -173,7 +173,7 @@ class BaseRoutes
 
 	/**
 	 * Internal use only
-	 * 
+	 *
 	 * Merge current route with other route route
 	 */
 	protected function merge(string $path, array $middlewares, BaseRoutes $route)
@@ -214,9 +214,9 @@ class BaseRoutes
 
 	/**
 	 * Group endpoint
-	 * 
+	 *
 	 * Group can be nested
-	 * 
+	 *
 	 * @param Closure $callback Callback will called with $routes parameter. To add routes that will have every group property add endpoint in $routes parameter
 	 */
 	public function group(string $path, array $middlewares, Closure $callback): void
@@ -230,15 +230,15 @@ class BaseRoutes
 
 	/**
 	 * Register error handler
-	 * 
+	 *
 	 * Only one error handler can be registed
-	 * 
+	 *
 	 * To change error handler first remove previous error handler by using removeErrorHandler method
-	 * 
+	 *
 	 * Can only be set in root route
-	 * 
+	 *
 	 * If set in other routes error handler will be ignored
-	 * 
+	 *
 	 * Only response available in error handler
 	 */
 	public function errorHandler(string $handler): void
@@ -270,8 +270,18 @@ class BaseRoutes
 			return;
 		}
 
-		$this->errorHandler = function () use ($handlerInstance, $functionName) {
-			$handlerInstance->$functionName();
+		$this->errorHandler = function (
+			$type,
+			$message,
+			$file,
+			$line,
+		) use ($handlerInstance, $functionName) {
+			$handlerInstance->$functionName(
+				$type,
+				$message,
+				$file,
+				$line,
+			);
 		};
 	}
 

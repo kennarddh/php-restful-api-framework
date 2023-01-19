@@ -20,6 +20,7 @@ class Routes extends BaseRoutes
 
 		$this->get('logInfo', 'Home::logInfo');
 		$this->get('logError', 'Home::logError');
+		$this->get('env', 'Home::env');
 
 		$this->post('validate', 'Home::validate');
 

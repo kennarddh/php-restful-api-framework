@@ -4,7 +4,6 @@ namespace Internal\Routes;
 
 use Exception;
 use Internal\Controllers\ResolveController;
-use Internal\Http\Request;
 use Internal\Http\Response;
 use Internal\Middlewares\ResolveMiddleware;
 use Application\Routes\Routes;
@@ -45,7 +44,7 @@ class Router
 
 						$middlewareInstance = new $middlewareName($request, $response);
 
-						// Throw error if defined method doesn't exist in middleware 
+						// Throw error if defined method doesn't exist in middleware
 						if (!method_exists($middlewareInstance, $middlewareFunctionName)) {
 							throw new Exception("Unable to load method: $middlewareFunctionName in $middleware");
 
@@ -65,7 +64,7 @@ class Router
 
 					$middlewareInstance = new $middlewareName($request, $response);
 
-					// Throw error if defined method doesn't exist in middleware 
+					// Throw error if defined method doesn't exist in middleware
 					if (!method_exists($middlewareInstance, $middlewareFunctionName)) {
 						throw new Exception("Unable to load method: $middlewareFunctionName in $middleware");
 
@@ -87,7 +86,7 @@ class Router
 
 				$controller = new $controllerName($request, $response);
 
-				// Throw error if defined method doesn't exist in controller 
+				// Throw error if defined method doesn't exist in controller
 				if (!method_exists($controller, $functionName)) {
 					throw new Exception("Unable to load method: $functionName in $route->controller");
 

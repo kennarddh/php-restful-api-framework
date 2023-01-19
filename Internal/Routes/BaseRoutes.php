@@ -7,6 +7,7 @@ use Common\OutputBuffer;
 use Exception;
 use Internal\Controllers\ResolveController;
 use Internal\Http\Singleton;
+use Internal\Logger\Logger;
 
 /**
  * All routes must extend BaseRoutes
@@ -72,6 +73,8 @@ class BaseRoutes
 
 			// Clear body
 			OutputBuffer::clear();
+
+			Logger::Log('error', 'Error Occured', ["type" => $type, "message" => $message, "file" => $file, "line" => $line]);
 
 			($this->errorHandler)(
 				$type,

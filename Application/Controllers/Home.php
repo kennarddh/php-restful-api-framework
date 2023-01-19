@@ -65,13 +65,8 @@ final class Home extends BaseController
 		], 200);
 	}
 
-	public function error(
-		$type,
-		$message,
-		$file,
-		$line,
-	) {
-		Logger::Log('error', 'Error Occured', ["type" => $type, "message" => $message, "file" => $file, "line" => $line]);
+	public function error()
+	{
 
 		$this->response->send([
 			'error' => 'Internal Server Error',

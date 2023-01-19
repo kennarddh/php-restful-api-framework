@@ -21,7 +21,7 @@
 -   [ ] Base Url Config
 -   [x] Start Command
 -   [x] Help Command
--   [ ] Environtment Variable
+-   [x] Environtment Variable
 -   [x] Logger
 -   [ ] Rotating File Logger
 -   [x] Logger Config

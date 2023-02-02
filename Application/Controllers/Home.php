@@ -5,6 +5,7 @@ namespace Application\Controllers;
 use Exception;
 use Internal\Configuration\Configuration;
 use Internal\Controllers\BaseController;
+use Internal\Database\Adapters\MySqlAdapter;
 use Internal\Libraries\Validation;
 use Internal\Logger\Logger;
 
@@ -118,5 +119,18 @@ final class Home extends BaseController
 	public function env()
 	{
 		$this->response->send(["data" => Configuration::getEnv('ABC')], 200);
+	}
+
+	public function mysql()
+	{
+		$db = new MySqlAdapter([
+			'host' => 'localhost',
+			'username' => 'root',
+			'password' => 'root',
+			'database' => 'test_api_framework',
+			'port' => 3306
+		]);
+
+		$this->response->send($db->Get('test', ['id', 'name'], []), 200);
 	}
 }

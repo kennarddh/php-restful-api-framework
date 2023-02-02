@@ -23,6 +23,7 @@ class Routes extends BaseRoutes
 		$this->get('env', 'Home::env');
 
 		$this->post('validate', 'Home::validate');
+		$this->get('mysql', 'Home::mysql');
 
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');

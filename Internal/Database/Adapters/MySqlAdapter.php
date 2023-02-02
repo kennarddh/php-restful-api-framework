@@ -33,7 +33,11 @@ class MySqlAdapter extends BaseAdapter
 			$stringFilter = [];
 
 			foreach ($filter as $key => $value) {
-				array_push($stringFilter, $key . " = " . $this->Escape($value));
+				if (is_array($value)) {
+					array_push($stringFilter, $key . " " . $value[0] . " " . $this->Escape($value[1]));
+				} else {
+					array_push($stringFilter, $key . " = " . $this->Escape($value));
+				}
 			}
 
 			$sql .= " WHERE " . join(' AND ', $stringFilter);

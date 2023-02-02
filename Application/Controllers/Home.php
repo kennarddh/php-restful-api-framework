@@ -131,6 +131,6 @@ final class Home extends BaseController
 			'port' => 3306
 		]);
 
-		$this->response->send($db->Get('test', ['id', 'name'], []), 200);
+		$this->response->send($db->Get('test', ['id', 'name'], ['id' => 1]), 200);
 	}
 }

@@ -27,7 +27,7 @@ abstract class BaseAdapter
 	/**
 	 * Insert new data
 	 */
-	// public abstract function Insert(string $tableName, array $data): bool;
+	public abstract function Insert(string $tableName, array $data): bool;
 
 	/**
 	 * Update data

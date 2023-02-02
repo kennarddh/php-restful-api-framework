@@ -131,6 +131,19 @@ final class Home extends BaseController
 			'port' => 3306
 		]);
 
-		$this->response->send($db->Get('test', ['id', 'name'], ['id' => 1]), 200);
+		$this->response->send($db->Get('test', ['id', 'name'], []), 200);
+	}
+
+	public function mysql_insert()
+	{
+		$db = new MySqlAdapter([
+			'host' => 'localhost',
+			'username' => 'root',
+			'password' => 'root',
+			'database' => 'test_api_framework',
+			'port' => 3306
+		]);
+
+		$this->response->send(['result' => $db->Insert('test', ['name' => 'x'])], 200);
 	}
 }

@@ -43,9 +43,9 @@ class MySqlAdapter extends BaseAdapter
 
 			foreach ($filter as $key => $value) {
 				if (is_array($value)) {
-					array_push($stringFilter, $key . " " . $value[0] . " " . $this->Escape($value[1]));
+					array_push($stringFilter, $key . " " . $value[0] . " " . $this->EscapeAndQuote($value[1]));
 				} else {
-					array_push($stringFilter, $key . " = " . $this->Escape($value));
+					array_push($stringFilter, $key . " = " . $this->EscapeAndQuote($value));
 				}
 			}
 

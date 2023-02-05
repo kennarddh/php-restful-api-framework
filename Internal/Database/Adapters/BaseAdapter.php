@@ -32,7 +32,7 @@ abstract class BaseAdapter
 	/**
 	 * Update data
 	 */
-	// public abstract function Update(string $tableName, array $filter, array $data): bool;
+	public abstract function Update(string $tableName, array $data, array $filter): bool;
 
 	/**
 	 * Delete data

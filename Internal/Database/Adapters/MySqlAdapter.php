@@ -2,6 +2,7 @@
 
 namespace Internal\Database\Adapters;
 
+use Exception;
 use Internal\Logger\Logger;
 use mysqli;
 
@@ -96,6 +97,34 @@ class MySqlAdapter extends BaseAdapter
 		}
 
 		$sql = "INSERT INTO $tableName (" . join(', ', array_keys($data)) . ') VALUES (' . join(', ', $values) . ')';
+
+		$result = $this->connection->query($sql);
+
+		return $result;
+	}
+
+	/**
+	 * Update data
+	 */
+	public function Update(string $tableName, array $data, array $filter): bool
+	{
+		if (empty($data)) {
+			throw new Exception('Update data cannot be empty');
+
+			return false;
+		}
+
+		$stringData = [];
+
+		foreach ($data as $key => $value) {
+			array_push($stringData, $key . " = " . $this->EscapeAndQuote($value));
+		}
+
+		$sql = "UPDATE $tableName SET " . join(', ', $stringData);
+
+		if (!empty($filter)) {
+			$sql .= " WHERE " . $this->FilterToWhereClauseString($filter);
+		}
 
 		$result = $this->connection->query($sql);
 

@@ -2,6 +2,7 @@
 
 namespace Internal\Database\Adapters;
 
+use Internal\Logger\Logger;
 use mysqli;
 
 class MySqlAdapter extends BaseAdapter
@@ -12,6 +13,14 @@ class MySqlAdapter extends BaseAdapter
 	public function Escape(string $string): string
 	{
 		return $this->connection->real_escape_string($string);
+	}
+
+	/**
+	 * Escape and quote string
+	 */
+	public function EscapeAndQuote(string $string): string
+	{
+		return '"' . $this->Escape($string) . '"';
 	}
 
 	/**
@@ -73,6 +82,32 @@ class MySqlAdapter extends BaseAdapter
 		}
 
 		$sql = "INSERT INTO $tableName (" . join(', ', array_keys($data)) . ') VALUES (' . join(', ', $values) . ')';
+
+		$result = $this->connection->query($sql);
+
+		return $result;
+	}
+
+	/**
+	 * Delete data
+	 */
+	public function Delete(string $tableName, array $filter): bool
+	{
+		$sql = "DELETE FROM $tableName";
+
+		if (!empty($filter)) {
+			$stringFilter = [];
+
+			foreach ($filter as $key => $value) {
+				if (is_array($value)) {
+					array_push($stringFilter, $key . " " . $value[0] . " " . $this->EscapeAndQuote($value[1]));
+				} else {
+					array_push($stringFilter, $key . " = " . $this->EscapeAndQuote($value));
+				}
+			}
+
+			$sql .= " WHERE " . join(' AND ', $stringFilter);
+		}
 
 		$result = $this->connection->query($sql);
 

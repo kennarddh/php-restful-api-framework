@@ -37,5 +37,5 @@ abstract class BaseAdapter
 	/**
 	 * Delete data
 	 */
-	// public abstract function Delete(string $tableName, array $filter): bool;
+	public abstract function Delete(string $tableName, array $filter): bool;
 }

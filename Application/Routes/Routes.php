@@ -25,6 +25,7 @@ class Routes extends BaseRoutes
 		$this->post('validate', 'Home::validate');
 		$this->get('mysql', 'Home::mysql');
 		$this->get('mysql_insert', 'Home::mysql_insert');
+		$this->get('mysql_delete', 'Home::mysql_delete');
 
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');

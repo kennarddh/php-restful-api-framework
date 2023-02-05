@@ -131,7 +131,7 @@ final class Home extends BaseController
 			'port' => 3306
 		]);
 
-		$this->response->send($db->Get('test', ['id', 'name'], []), 200);
+		$this->response->send($db->Get('test', ['id', 'name'], ['name' => 'x']), 200);
 	}
 
 	public function mysql_insert()
@@ -145,5 +145,18 @@ final class Home extends BaseController
 		]);
 
 		$this->response->send(['result' => $db->Insert('test', ['name' => 'x'])], 200);
+	}
+
+	public function mysql_delete()
+	{
+		$db = new MySqlAdapter([
+			'host' => 'localhost',
+			'username' => 'root',
+			'password' => 'root',
+			'database' => 'test_api_framework',
+			'port' => 3306
+		]);
+
+		$this->response->send(['result' => $db->Delete('test', ['name' => 'x'])], 200);
 	}
 }

@@ -24,6 +24,30 @@ class MySqlAdapter extends BaseAdapter
 	}
 
 	/**
+	 * Internal use only
+	 *
+	 * Convert filter array to where clause string
+	 */
+	protected function FilterToWhereClauseString(array $filter): string
+	{
+		if (!empty($filter)) {
+			$stringFilter = [];
+
+			foreach ($filter as $key => $value) {
+				if (is_array($value)) {
+					array_push($stringFilter, $key . " " . $value[0] . " " . $this->EscapeAndQuote($value[1]));
+				} else {
+					array_push($stringFilter, $key . " = " . $this->EscapeAndQuote($value));
+				}
+			}
+
+			return join(' AND ', $stringFilter);
+		}
+
+		return '';
+	}
+
+	/**
 	 * Connect
 	 */
 	public function __construct(array $data)
@@ -39,17 +63,7 @@ class MySqlAdapter extends BaseAdapter
 		$sql = "SELECT " . join(', ', $selects) . " FROM $tableName";
 
 		if (!empty($filter)) {
-			$stringFilter = [];
-
-			foreach ($filter as $key => $value) {
-				if (is_array($value)) {
-					array_push($stringFilter, $key . " " . $value[0] . " " . $this->EscapeAndQuote($value[1]));
-				} else {
-					array_push($stringFilter, $key . " = " . $this->EscapeAndQuote($value));
-				}
-			}
-
-			$sql .= " WHERE " . join(' AND ', $stringFilter);
+			$sql .= " WHERE " . $this->FilterToWhereClauseString($filter);
 		}
 
 		$query = $this->connection->query($sql);
@@ -96,17 +110,7 @@ class MySqlAdapter extends BaseAdapter
 		$sql = "DELETE FROM $tableName";
 
 		if (!empty($filter)) {
-			$stringFilter = [];
-
-			foreach ($filter as $key => $value) {
-				if (is_array($value)) {
-					array_push($stringFilter, $key . " " . $value[0] . " " . $this->EscapeAndQuote($value[1]));
-				} else {
-					array_push($stringFilter, $key . " = " . $this->EscapeAndQuote($value));
-				}
-			}
-
-			$sql .= " WHERE " . join(' AND ', $stringFilter);
+			$sql .= " WHERE " . $this->FilterToWhereClauseString($filter);
 		}
 
 		$result = $this->connection->query($sql);

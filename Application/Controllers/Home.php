@@ -5,6 +5,7 @@ namespace Application\Controllers;
 use Exception;
 use Internal\Configuration\Configuration;
 use Internal\Controllers\BaseController;
+use Internal\Database\Adapters\MongoDBAdapter;
 use Internal\Database\Adapters\MySqlAdapter;
 use Internal\Libraries\Validation;
 use Internal\Logger\Logger;
@@ -171,5 +172,15 @@ final class Home extends BaseController
 		]);
 
 		$this->response->send(['result' => $db->Delete('test', ['name' => 'x'])], 200);
+	}
+
+	public function mongo_insert()
+	{
+		$db = new MongoDBAdapter([
+			'uri' => 'mongodb://127.0.0.1:27017/',
+			'database' => 'test_api_framework',
+		]);
+
+		$this->response->send(['result' => $db->Insert('test', [ 'name' => 'x'])], 200);
 	}
 }

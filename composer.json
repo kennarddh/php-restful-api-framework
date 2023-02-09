@@ -11,6 +11,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "vlucas/phpdotenv": "5.5.x-dev"
+        "vlucas/phpdotenv": "5.5.x-dev",
+        "mongodb/mongodb": "^1.15"
     }
 }

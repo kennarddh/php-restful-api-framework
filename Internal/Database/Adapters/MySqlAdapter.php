@@ -3,7 +3,6 @@
 namespace Internal\Database\Adapters;
 
 use Exception;
-use Internal\Logger\Logger;
 use mysqli;
 
 class MySqlAdapter extends BaseAdapter

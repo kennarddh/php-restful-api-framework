@@ -2,6 +2,8 @@
 
 namespace Internal\Database\Adapters;
 
+use Exception;
+
 /**
  * Internal use only
  *
@@ -22,20 +24,20 @@ abstract class BaseAdapter
 	/**
 	 * Select data
 	 */
-	public abstract function Get(string $tableName, array $selects, array $filter): array;
+	public abstract function Get(string $tableName, array $selects, array $filter): array|Exception;
 
 	/**
 	 * Insert new data
 	 */
-	public abstract function Insert(string $tableName, array $data): bool;
+	public abstract function Insert(string $tableName, array $data): bool|Exception;
 
 	/**
 	 * Update data
 	 */
-	public abstract function Update(string $tableName, array $data, array $filter): bool;
+	public abstract function Update(string $tableName, array $data, array $filter): bool|Exception;
 
 	/**
 	 * Delete data
 	 */
-	public abstract function Delete(string $tableName, array $filter): bool;
+	public abstract function Delete(string $tableName, array $filter): bool|Exception;
 }

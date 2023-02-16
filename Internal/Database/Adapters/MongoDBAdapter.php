@@ -47,7 +47,7 @@ class MongoDBAdapter extends BaseAdapter
 			case 'double':
 				return $data;
 			case 'string':
-				return str_replace("\u{FF04}", '$',  str_replace("\u{FF0E}", '.',  $data));
+				return str_replace("\u{FF04}", '$', str_replace("\u{FF0E}", '.',  $data));
 			case 'array': {
 					$temp = [];
 

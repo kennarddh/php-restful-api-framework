@@ -10,7 +10,7 @@ use TypeError;
 class MongoDBAdapter extends BaseAdapter
 {
 	/**
-	 * Escape string
+	 * Escape data
 	 */
 	public function Escape(array | string | bool | int | float $data): array | string | bool | int | float
 	{
@@ -26,6 +26,33 @@ class MongoDBAdapter extends BaseAdapter
 
 					foreach ($data as $key => $value) {
 						$temp[$this->Escape($key)] = $this->Escape($value);
+					}
+
+					return $temp;
+				}
+
+			default:
+				throw new TypeError("Type " . gettype($data) . ' is not supported');
+		}
+	}
+
+	/**
+	 * Unescape data
+	 */
+	public function Unescape(array | string | bool | int | float $data): array | string | bool | int | float
+	{
+		switch (gettype($data)) {
+			case 'boolean':
+			case 'integer':
+			case 'double':
+				return $data;
+			case 'string':
+				return str_replace("\u{FF04}", '$',  str_replace("\u{FF0E}", '.',  $data));
+			case 'array': {
+					$temp = [];
+
+					foreach ($data as $key => $value) {
+						$temp[$this->Unescape($key)] = $this->Unescape($value);
 					}
 
 					return $temp;

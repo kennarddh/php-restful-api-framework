@@ -181,6 +181,7 @@ final class Home extends BaseController
 			'database' => 'test_api_framework',
 		]);
 
-		$this->response->send(['result' => $db->Insert('test', [ 'name' => 'x'])], 200);
+		// $this->response->send(['result' => $db->Insert('test', [ 'name' => 'x'])], 200);
+		$this->response->send(['result' => $db->Escape(['$or' => ['test.table2' => 'hello', 'test.table3' => 'world']])], 200);
 	}
 }

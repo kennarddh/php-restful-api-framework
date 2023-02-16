@@ -29,6 +29,7 @@ class Routes extends BaseRoutes
 		$this->post('mysql_delete', 'Home::mysql_delete');
 
 		$this->post('mongo_insert', 'Home::mongo_insert');
+		$this->post('mongo_get', 'Home::mongo_get');
 
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');

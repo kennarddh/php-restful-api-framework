@@ -183,4 +183,14 @@ final class Home extends BaseController
 
 		$this->response->send(['result' => $db->Insert('test', ['name' => 'x'])], 200);
 	}
+
+	public function mongo_get()
+	{
+		$db = new MongoDBAdapter([
+			'uri' => 'mongodb://127.0.0.1:27017/',
+			'database' => 'test_api_framework',
+		]);
+
+		$this->response->send(['result' => $db->Get('test', ['name', '_id'], [])], 200);
+	}
 }

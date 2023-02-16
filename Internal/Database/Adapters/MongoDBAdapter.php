@@ -5,6 +5,7 @@ namespace Internal\Database\Adapters;
 use Exception;
 use Internal\Logger\Logger;
 use MongoDB\Client;
+use Scripts\Console\Console;
 use TypeError;
 
 class MongoDBAdapter extends BaseAdapter
@@ -84,7 +85,35 @@ class MongoDBAdapter extends BaseAdapter
 	 */
 	public function Get(string $collectionName, array $selects, array $filter): array
 	{
-		return [];
+		$collection = $this->connection->$collectionName;
+
+		$projection = ['_id' => 0];
+
+		foreach ($selects as $key) {
+			$projection[$key] = 1;
+		}
+
+		$cursor = $collection->find(
+			$filter,
+			[
+				'projection' => $projection,
+			]
+		);
+
+		$results = [];
+
+		foreach ($cursor as $document) {
+			if (isset($document['_id'])) {
+				if (isset(((array)$document['_id'])['oid'])) {
+					$document['_id'] = ((array)$document['_id'])['oid'];
+				} else if (isset(((array)$document['_id'])[0])) {
+					$document['_id'] = ((array)$document['_id'])[0];
+				}
+			}
+			array_push($results, $document);
+		}
+
+		return $results;
 	}
 
 	/**

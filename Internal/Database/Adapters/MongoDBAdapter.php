@@ -35,17 +35,16 @@ class MongoDBAdapter extends BaseAdapter
 	/**
 	 * Insert new data
 	 */
-	public function Insert(string $collectionName, array $data): bool|Exception
+	public function Insert(string $collectionName, array $data): bool
 	{
 		$collection = $this->connection->$collectionName;
-
-		$insertOneResult = null;
 
 		try {
 			$insertOneResult = $collection->insertOne($data);
 		} catch (Exception $e) {
 			Logger::Log('info', "MongoDB Insert Error\n" . $e->__toString());
-			return $e;
+
+			return false;
 		}
 
 		return true;

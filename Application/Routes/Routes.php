@@ -30,6 +30,7 @@ class Routes extends BaseRoutes
 
 		$this->post('mongo_insert', 'Home::mongo_insert');
 		$this->post('mongo_get', 'Home::mongo_get');
+		$this->post('mongo_update', 'Home::mongo_update');
 
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');

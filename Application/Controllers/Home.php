@@ -9,6 +9,7 @@ use Internal\Database\Adapters\MongoDBAdapter;
 use Internal\Database\Adapters\MySqlAdapter;
 use Internal\Libraries\Validation;
 use Internal\Logger\Logger;
+use MongoDB\BSON;
 
 final class Home extends BaseController
 {
@@ -191,6 +192,16 @@ final class Home extends BaseController
 			'database' => 'test_api_framework',
 		]);
 
-		$this->response->send(['result' => $db->Get('test', ['name', '_id'], [])], 200);
+		$this->response->send(['result' => $db->Get('test', ['name', '_id'], ['_id' => new BSON\ObjectID('63e4dc0c90c62b80d70f0e56')])], 200);
+	}
+
+	public function mongo_update()
+	{
+		$db = new MongoDBAdapter([
+			'uri' => 'mongodb://127.0.0.1:27017/',
+			'database' => 'test_api_framework',
+		]);
+
+		$this->response->send(['result' => $db->Update('test', ['name' => 'foo'], ['name' => 'x'])], 200);
 	}
 }

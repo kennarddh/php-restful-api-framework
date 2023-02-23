@@ -5,7 +5,6 @@ namespace Internal\Database\Adapters;
 use Exception;
 use Internal\Logger\Logger;
 use MongoDB\Client;
-use Scripts\Console\Console;
 use TypeError;
 
 class MongoDBAdapter extends BaseAdapter
@@ -110,6 +109,7 @@ class MongoDBAdapter extends BaseAdapter
 					$document['_id'] = ((array)$document['_id'])[0];
 				}
 			}
+
 			array_push($results, $document);
 		}
 
@@ -137,15 +137,25 @@ class MongoDBAdapter extends BaseAdapter
 	/**
 	 * Update data
 	 */
-	public function Update(string $tableName, array $data, array $filter): bool
+	public function Update(string $collectionName, array $data, array $filter): bool
 	{
+		$collection = $this->connection->$collectionName;
+
+		try {
+			$updateManyResult = $collection->updateMany($filter, ['$set' => $data]);
+		} catch (Exception $e) {
+			Logger::Log('info', "MongoDB Update Error\n" . $e->__toString());
+
+			return false;
+		}
+
 		return true;
 	}
 
 	/**
 	 * Delete data
 	 */
-	public function Delete(string $tableName, array $filter): bool
+	public function Delete(string $collectionName, array $filter): bool
 	{
 		return true;
 	}

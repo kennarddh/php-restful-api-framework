@@ -126,7 +126,7 @@ class MongoDBAdapter extends BaseAdapter
 		try {
 			$insertOneResult = $collection->insertOne($data);
 		} catch (Exception $e) {
-			Logger::Log('info', "MongoDB Insert Error\n" . $e->__toString());
+			Logger::Log('error', "MongoDB Insert Error\n" . $e->__toString());
 
 			return false;
 		}
@@ -144,7 +144,7 @@ class MongoDBAdapter extends BaseAdapter
 		try {
 			$updateManyResult = $collection->updateMany($filter, ['$set' => $data]);
 		} catch (Exception $e) {
-			Logger::Log('info', "MongoDB Update Error\n" . $e->__toString());
+			Logger::Log('error', "MongoDB Update Error\n" . $e->__toString());
 
 			return false;
 		}
@@ -157,6 +157,16 @@ class MongoDBAdapter extends BaseAdapter
 	 */
 	public function Delete(string $collectionName, array $filter): bool
 	{
+		$collection = $this->connection->$collectionName;
+
+		try {
+			$deleteManyResult = $collection->deleteMany($filter);
+		} catch (Exception $e) {
+			Logger::Log('error', "MongoDB Delete Error\n" . $e->__toString());
+
+			return false;
+		}
+
 		return true;
 	}
 }

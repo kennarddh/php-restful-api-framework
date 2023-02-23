@@ -204,4 +204,14 @@ final class Home extends BaseController
 
 		$this->response->send(['result' => $db->Update('test', ['name' => 'foo'], ['name' => 'x'])], 200);
 	}
+
+	public function mongo_delete()
+	{
+		$db = new MongoDBAdapter([
+			'uri' => 'mongodb://127.0.0.1:27017/',
+			'database' => 'test_api_framework',
+		]);
+
+		$this->response->send(['result' => $db->Delete('test', ['_id' => 'a'])], 200);
+	}
 }

@@ -10,6 +10,7 @@ use Internal\Database\Adapters\MySqlAdapter;
 use Internal\Libraries\Validation;
 use Internal\Logger\Logger;
 use MongoDB\BSON;
+use Internal\Libraries\JWT;
 
 final class Home extends BaseController
 {
@@ -213,5 +214,29 @@ final class Home extends BaseController
 		]);
 
 		$this->response->send(['result' => $db->Delete('test', ['_id' => 'a'])], 200);
+	}
+
+	public function jwt_decode()
+	{
+		$this->response->send(['result' => JWT::Decode(
+			"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJ4IjpbInkiLCJ6Il19.RPHKf4vAdRYXrqgi-ecuNY5ODUjPJ682NNiPQ66vsX8",
+			'test',
+			'HS256'
+		)], 200);
+	}
+
+	public function jwt_encode()
+	{
+		$this->response->send(['result' => JWT::Encode(
+			[
+				'foo' => 'bar',
+				'x' => [
+					'y',
+					'z'
+				]
+			],
+			'test',
+			'HS256'
+		)], 200);
 	}
 }

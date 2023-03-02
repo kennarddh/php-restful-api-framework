@@ -33,6 +33,9 @@ class Routes extends BaseRoutes
 		$this->post('mongo_update', 'Home::mongo_update');
 		$this->post('mongo_delete', 'Home::mongo_delete');
 
+		$this->post('jwt_encode', 'Home::jwt_encode');
+		$this->post('jwt_decode', 'Home::jwt_decode');
+
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');
 		$this->get(':id', 'Home::index');

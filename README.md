@@ -8,7 +8,9 @@
 -   [x] Composer
 -   [x] Database MongoDB, Mysql
 -   [ ] ORM Transaction, Nested Query, Group By, Order By, Select, Insert, Update, Delete
--   [ ] Library JWT, File System, Security
+-   [x] Library JWT
+-   [ ] Library File System
+-   [ ] Library Security
 -   [x] Request Validation
 -   [x] Request Validation Nested Object
 -   [ ] Request Validation Nested Array

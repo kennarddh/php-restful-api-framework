@@ -5,7 +5,6 @@ namespace Internal\Routes;
 use Exception;
 use Internal\Controllers\ResolveController;
 use Internal\Http\Response;
-use Internal\Middlewares\ResolveMiddleware;
 use Application\Routes\Routes;
 use Internal\Http\Singleton;
 
@@ -38,41 +37,13 @@ class Router
 				$response = Singleton::GetResponse()->setAfterMiddleware(function (Response $response) use ($request, $route) {
 					// Run all after middleware sequentially
 					foreach ($route->middlewares->after as $middleware) {
-						$middlewareFunctionName = ResolveMiddleware::ResolveFunctionName($middleware);
-
-						$middlewareName = ResolveMiddleware::ResolveComputed($middleware);
-
-						$middlewareInstance = new $middlewareName($request, $response);
-
-						// Throw error if defined method doesn't exist in middleware
-						if (!method_exists($middlewareInstance, $middlewareFunctionName)) {
-							throw new Exception("Unable to load method: $middlewareFunctionName in $middleware");
-
-							return;
-						}
-
-						// Call middleware method
-						$middlewareInstance->$middlewareFunctionName();
+						$middleware($request, $response);
 					}
 				});
 
 				// Run all bedore middleware sequentially
 				foreach ($route->middlewares->before as $middleware) {
-					$middlewareFunctionName = ResolveMiddleware::ResolveFunctionName($middleware);
-
-					$middlewareName = ResolveMiddleware::ResolveComputed($middleware);
-
-					$middlewareInstance = new $middlewareName($request, $response);
-
-					// Throw error if defined method doesn't exist in middleware
-					if (!method_exists($middlewareInstance, $middlewareFunctionName)) {
-						throw new Exception("Unable to load method: $middlewareFunctionName in $middleware");
-
-						return;
-					}
-
-					// Call middleware method
-					$middlewareInstance->$middlewareFunctionName();
+					$middleware($request, $response);
 
 					// Don't call controller or next before middleware if response ended in current middleware
 					if ($response->ended()) {

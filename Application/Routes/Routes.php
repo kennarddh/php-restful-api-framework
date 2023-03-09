@@ -4,6 +4,8 @@ namespace Application\Routes;
 
 use Internal\Routes\BaseRoutes;
 
+use Internal\Middlewares\Default\Security;
+
 class Routes extends BaseRoutes
 {
 	public function __construct()
@@ -35,6 +37,8 @@ class Routes extends BaseRoutes
 
 		$this->post('jwt_encode', 'Home::jwt_encode');
 		$this->post('jwt_decode', 'Home::jwt_decode');
+
+		$this->get('cors', 'Home::cors', ['before' => [Security::CORS(["http://localhost:3000", "https://localhost:8080"])]]);
 
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');

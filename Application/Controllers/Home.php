@@ -239,4 +239,9 @@ final class Home extends BaseController
 			'HS256'
 		)], 200);
 	}
+
+	public function cors()
+	{
+		$this->response->send(['result' => 'success'], 200);
+	}
 }

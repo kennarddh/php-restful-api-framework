@@ -210,7 +210,7 @@ class BaseRoutes
 	/**
 	 * Merge with other routes instance
 	 */
-	public function use(string $path, array $middlewares, BaseRoutes $routes): void
+	public function use(string $path, BaseRoutes $routes, array $middlewares): void
 	{
 		$this->merge($path, $middlewares, $routes);
 	}

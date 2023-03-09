@@ -5,6 +5,7 @@ namespace Application\Routes;
 use Internal\Routes\BaseRoutes;
 
 use Internal\Middlewares\Default\Security;
+use Application\Middlewares\Auth;
 
 class Routes extends BaseRoutes
 {
@@ -14,9 +15,9 @@ class Routes extends BaseRoutes
 		parent::__construct(true);
 
 		$this->get('create', 'Home::create');
-		$this->post('', 'Home::post', ["before" => ["Auth::index"], 'after' => ['Auth::after']]);
+		$this->post('', 'Home::post', ["before" => [Auth::index()], 'after' => [Auth::after()]]);
 
-		$this->use('users', [], new UsersRoutes);
+		$this->use('users', new UsersRoutes, []);
 
 		$this->get('file', 'Home::file');
 

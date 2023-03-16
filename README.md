@@ -10,7 +10,7 @@
 -   [ ] ORM Transaction, Nested Query, Group By, Order By, Select, Insert, Update, Delete
 -   [x] Library JWT
 -   [ ] Library File System
--   [ ] Library Security
+-   [x] Library Security
 -   [x] Request Validation
 -   [x] Request Validation Nested Object
 -   [ ] Request Validation Nested Array

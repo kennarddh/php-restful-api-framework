@@ -21,7 +21,7 @@ class Utils
 		$data = json_decode($json);
 
 		// Merge $_POST for form data and $data for raw json
-		return json_decode(json_encode(array_merge((array) $data, $_POST)));
+		return (object) array_merge((array) $data, $_POST);
 	}
 
 	/**

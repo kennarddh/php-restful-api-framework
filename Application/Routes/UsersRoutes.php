@@ -13,7 +13,7 @@ class UsersRoutes extends BaseRoutes
 
 		$this->get('', 'Home::all');
 		$this->group(':id', ["before" => [Auth::index()]], function (BaseRoutes $routes) {
-			$routes->get('balance', 'Home::balance', ['after' => [Auth::after()]]);
+			$routes->get('balance', 'Home::balance', Auth::after());
 		});
 	}
 }

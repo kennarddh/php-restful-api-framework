@@ -100,11 +100,26 @@ class BaseRoutes
 	public function request(
 		string $path,
 		string $method,
-		string $controller,
-		array | null $middlewares = ['before' => [], 'after' => []]
+		mixed ...$controllerAndMiddlewares
 	): void {
-		if (!isset($middlewares['after'])) $middlewares['after'] = [];
-		if (!isset($middlewares['before'])) $middlewares['before'] = [];
+		$middlewares = ["after" => [], "before" => []];
+		$controller = null;
+
+		foreach ($controllerAndMiddlewares as $controllerOrMiddleware) {
+			if (gettype($controllerOrMiddleware) === "string") {
+				$controller = $controllerOrMiddleware;
+			} else {
+				if ($controller === null) {
+					$middlewares["before"][] = $controllerOrMiddleware;
+				} else {
+					$middlewares["after"][] = $controllerOrMiddleware;
+				}
+			}
+		}
+
+		if ($controller === null) {
+			throw new Exception("No controller found");
+		}
 
 		array_push($this->paths, (object) [
 			'path' => $path,
@@ -119,9 +134,11 @@ class BaseRoutes
 	 *
 	 * Character * will accept anything including / (slash) character
 	 */
-	public function get(string $path, string $controller, array $middlewares = []): void
-	{
-		$this->request($path, "GET", $controller, $middlewares);
+	public function get(
+		string $path,
+		mixed ...$controllerAndMiddlewares
+	): void {
+		$this->request($path, "GET", ...$controllerAndMiddlewares);
 	}
 
 	/**
@@ -129,9 +146,11 @@ class BaseRoutes
 	 *
 	 * Character * will accept anything including / (slash) character
 	 */
-	public function post(string $path, string $controller, array $middlewares = []): void
-	{
-		$this->request($path, "POST", $controller, $middlewares);
+	public function post(
+		string $path,
+		mixed ...$controllerAndMiddlewares
+	): void {
+		$this->request($path, "POST", ...$controllerAndMiddlewares);
 	}
 
 	/**
@@ -139,9 +158,11 @@ class BaseRoutes
 	 *
 	 * Character * will accept anything including / (slash) character
 	 */
-	public function put(string $path, string $controller, array $middlewares = []): void
-	{
-		$this->request($path, "PUT", $controller, $middlewares);
+	public function put(
+		string $path,
+		mixed ...$controllerAndMiddlewares
+	): void {
+		$this->request($path, "PUT", ...$controllerAndMiddlewares);
 	}
 
 	/**
@@ -149,9 +170,11 @@ class BaseRoutes
 	 *
 	 * Character * will accept anything including / (slash) character
 	 */
-	public function delete(string $path, string $controller, array $middlewares = []): void
-	{
-		$this->request($path, "DELETE", $controller, $middlewares);
+	public function delete(
+		string $path,
+		mixed ...$controllerAndMiddlewares
+	): void {
+		$this->request($path, "DELETE", ...$controllerAndMiddlewares);
 	}
 
 	/**
@@ -159,9 +182,11 @@ class BaseRoutes
 	 *
 	 * Character * will accept anything including / (slash) character
 	 */
-	public function patch(string $path, string $controller, array $middlewares = []): void
-	{
-		$this->request($path, "PATCH", $controller, $middlewares);
+	public function patch(
+		string $path,
+		mixed ...$controllerAndMiddlewares
+	): void {
+		$this->request($path, "PATCH", ...$controllerAndMiddlewares);
 	}
 
 	/**
@@ -169,9 +194,11 @@ class BaseRoutes
 	 *
 	 * Character * will accept anything including / (slash) character
 	 */
-	public function all(string $path, string $controller, array $middlewares = []): void
-	{
-		$this->request($path, "ALL", $controller, $middlewares);
+	public function all(
+		string $path,
+		mixed ...$controllerAndMiddlewares
+	): void {
+		$this->request($path, "ALL", ...$controllerAndMiddlewares);
 	}
 
 	/**
@@ -179,20 +206,36 @@ class BaseRoutes
 	 *
 	 * Merge current route with other route route
 	 */
-	protected function merge(string $path, array $middlewares, BaseRoutes $route)
-	{
-		if ($route->isRoot && $this->isRoot) {
+	protected function merge(
+		string $path,
+		mixed ...$routerAndMiddlewares
+	) {
+		$middlewares = ["after" => [], "before" => []];
+		$router = null;
+
+		foreach ($routerAndMiddlewares as $routerOrMiddleware) {
+			if ($routerOrMiddleware instanceof BaseRoutes) {
+				$router = $routerOrMiddleware;
+			} else {
+				if ($router === null) {
+					$middlewares["before"][] = $routerOrMiddleware;
+				} else {
+					$middlewares["after"][] = $routerOrMiddleware;
+				}
+			}
+		}
+
+		if (!($router instanceof BaseRoutes)) {
+			throw new Exception("No router found");
+		}
+
+		if ($router->isRoot && $this->isRoot) {
 			throw new Exception('Cannot merge 2 root routes');
 
 			return;
 		}
 
-		if ($middlewares === null) $middlewares = [];
-
-		if (!isset($middlewares['after'])) $middlewares['after'] = [];
-		if (!isset($middlewares['before'])) $middlewares['before'] = [];
-
-		$paths = $route->paths;
+		$paths = $router->paths;
 
 		foreach ($paths as $iterPath) {
 			array_push($this->paths, (object) [
@@ -210,9 +253,11 @@ class BaseRoutes
 	/**
 	 * Merge with other routes instance
 	 */
-	public function use(string $path, BaseRoutes $routes, array $middlewares): void
-	{
-		$this->merge($path, $middlewares, $routes);
+	public function use(
+		string $path,
+		mixed ...$routerAndMiddlewares
+	): void {
+		$this->merge($path, ...$routerAndMiddlewares);
 	}
 
 	/**
@@ -224,11 +269,14 @@ class BaseRoutes
 	 */
 	public function group(string $path, array $middlewares, Closure $callback): void
 	{
+		if (!isset($middlewares['after'])) $middlewares['after'] = [];
+		if (!isset($middlewares['before'])) $middlewares['before'] = [];
+
 		$newRoutes = new self();
 
 		$callback($newRoutes);
 
-		$this->merge($path, $middlewares, $newRoutes);
+		$this->use($path, ...$middlewares['before'], ...[$newRoutes], ...$middlewares['after']);
 	}
 
 	/**

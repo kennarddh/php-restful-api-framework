@@ -15,9 +15,9 @@ class Routes extends BaseRoutes
 		parent::__construct(true);
 
 		$this->get('create', 'Home::create');
-		$this->post('', 'Home::post', ["before" => [Auth::index()], 'after' => [Auth::after()]]);
+		$this->post('', Auth::index(), 'Home::post', Auth::after());
 
-		$this->use('users', new UsersRoutes, []);
+		$this->use('users', new UsersRoutes);
 
 		$this->get('file', 'Home::file');
 
@@ -39,7 +39,7 @@ class Routes extends BaseRoutes
 		$this->post('jwt_encode', 'Home::jwt_encode');
 		$this->post('jwt_decode', 'Home::jwt_decode');
 
-		$this->get('cors', 'Home::cors', ['before' => [Security::CORS(["http://localhost:3000", "https://localhost:8080"])]]);
+		$this->get('cors', Security::CORS(["http://localhost:3000", "https://localhost:8080"]), 'Home::cors');
 
 		$this->all('all', 'Home::allMethod');
 		$this->get('error', 'Home::tryThrow');

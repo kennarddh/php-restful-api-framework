@@ -53,8 +53,6 @@ class BaseRoutes
 
 		// Error handler wrapper
 		$errorHandler = function () {
-			if ($this->errorHandler === null) return false;
-
 			$error = error_get_last();
 
 			if ($error === null) {
@@ -76,12 +74,14 @@ class BaseRoutes
 
 			Logger::Log('error', 'Error Occured', ["type" => $type, "message" => $message, "file" => $file, "line" => $line]);
 
-			($this->errorHandler)(
-				$type,
-				$message,
-				$file,
-				$line,
-			);
+			if ($this->errorHandler !== null) {
+				($this->errorHandler)(
+					$type,
+					$message,
+					$file,
+					$line,
+				);
+			}
 
 			OutputBuffer::flush();
 

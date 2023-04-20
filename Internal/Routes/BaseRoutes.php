@@ -249,19 +249,11 @@ class BaseRoutes
 			return;
 		}
 
-		$paths = $router->paths;
-
-		foreach ($paths as $iterPath) {
-			array_push($this->paths, (object) [
-				'path' => $path . '/' . $iterPath->path,
-				'method' => $iterPath->method,
-				'controller' => $iterPath->controller,
-				'middlewares' => (object) [
-					'before' => array_merge($middlewares['before'], $iterPath->middlewares->before),
-					'after' => array_merge($middlewares['after'], $iterPath->middlewares->after),
-				]
-			]);
-		}
+		array_push($this->paths, (object) [
+			'path' => $path,
+			'middlewares' => $middlewares,
+			'router' => $router,
+		]);
 	}
 
 	/**
@@ -281,16 +273,13 @@ class BaseRoutes
 	 *
 	 * @param Closure $callback Callback will called with $routes parameter. To add routes that will have every group property add endpoint in $routes parameter
 	 */
-	public function group(string $path, array $middlewares, Closure $callback): void
+	public function group(string $path, Closure $callback): void
 	{
-		if (!isset($middlewares['after'])) $middlewares['after'] = [];
-		if (!isset($middlewares['before'])) $middlewares['before'] = [];
-
 		$newRoutes = new self();
 
 		$callback($newRoutes);
 
-		$this->use($path, ...$middlewares['before'], ...[$newRoutes], ...$middlewares['after']);
+		$this->use($path, $newRoutes);
 	}
 
 	/**

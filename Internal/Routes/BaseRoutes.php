@@ -41,6 +41,20 @@ class BaseRoutes
 	 */
 	protected bool $isRoot = false;
 
+	/**
+	 * Internal use only
+	 *
+	 * After middlewares list
+	 */
+	protected array $afterMiddlewares;
+
+	/**
+	 * Internal use only
+	 *
+	 * Before middlewares list
+	 */
+	protected array $beforeMiddlewares;
+
 	function __construct(bool $isRoot = false)
 	{
 		$this->isRoot = $isRoot;
@@ -348,5 +362,21 @@ class BaseRoutes
 		}
 
 		$this->errorHandler = null;
+	}
+
+	/**
+	 * Set after middleware
+	 */
+	public function setAfterMiddlewares(Closure ...$middlewares)
+	{
+		$this->afterMiddlewares = array_merge($this->afterMiddlewares, ...$middlewares);
+	}
+
+	/**
+	 * Set before middleware
+	 */
+	public function setBeforeMiddlewares(Closure ...$middlewares)
+	{
+		$this->beforeMiddlewares = array_merge($this->beforeMiddlewares, ...$middlewares);
 	}
 }

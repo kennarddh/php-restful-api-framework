@@ -12,7 +12,9 @@ class UsersRoutes extends BaseRoutes
 		parent::__construct();
 
 		$this->get('', 'Home::all');
-		$this->group(':id', ["before" => [Auth::index()]], function (BaseRoutes $routes) {
+		$this->group(':id', function (BaseRoutes $routes) {
+			$routes->setBeforeMiddlewares(Auth::index());
+
 			$routes->get('balance', 'Home::balance', Auth::after());
 		});
 	}

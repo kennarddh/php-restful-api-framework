@@ -46,14 +46,14 @@ class BaseRoutes
 	 *
 	 * After middlewares list
 	 */
-	protected array $afterMiddlewares;
+	protected array $afterMiddlewares = [];
 
 	/**
 	 * Internal use only
 	 *
 	 * Before middlewares list
 	 */
-	protected array $beforeMiddlewares;
+	protected array $beforeMiddlewares = [];
 
 	function __construct(bool $isRoot = false)
 	{
@@ -251,7 +251,7 @@ class BaseRoutes
 
 		array_push($this->paths, (object) [
 			'path' => $path,
-			'middlewares' => $middlewares,
+			'middlewares' => (object) $middlewares,
 			'router' => $router,
 		]);
 	}
@@ -358,7 +358,7 @@ class BaseRoutes
 	 */
 	public function setAfterMiddlewares(Closure ...$middlewares)
 	{
-		$this->afterMiddlewares = array_merge($this->afterMiddlewares, ...$middlewares);
+		$this->afterMiddlewares = array_merge($this->afterMiddlewares, $middlewares);
 	}
 
 	/**
@@ -366,6 +366,6 @@ class BaseRoutes
 	 */
 	public function setBeforeMiddlewares(Closure ...$middlewares)
 	{
-		$this->beforeMiddlewares = array_merge($this->beforeMiddlewares, ...$middlewares);
+		$this->beforeMiddlewares = array_merge($this->beforeMiddlewares, $middlewares);
 	}
 }

@@ -49,7 +49,7 @@ final class Home extends BaseController
 	public function balance()
 	{
 		$this->response->send([
-			'params' => $this->request->params,
+			'params' => $this->request->params
 		], 200);
 	}
 

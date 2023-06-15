@@ -18,72 +18,70 @@ class Router
 		string $url,
 		string $method,
 		BaseRoutes $routes,
-		string $tempPath = '',
-		array $beforeMiddlewares = [],
-		array $afterMiddlewares = [],
+		array $unmatchedUrl = null,
+		array $middlewares = ["after" => [], "before" => []],
+		array $params = []
 	) {
-		$keys = [];
-		$values = [];
+		if ($unmatchedUrl === null) {
+			$unmatchedUrl = explode('/', $url);
+		}
 
-		foreach ($routes->paths as $route) {
-			$tempKeys = [];
-			$tempValues = [];
+		foreach ($routes->paths as $path) {
+			$pathSliced = explode('/', $path->path);
 
-			$path = $tempPath === "" ? $route->path : $tempPath . '/' . $route->path;
+			if (count($pathSliced) > count($unmatchedUrl)) continue;
 
-			Logger::Log("info", 'regex', [
-				"path" => $path,
-				"keys" => $tempKeys,
-				'regex' => Utils::ToRegex($path, $tempKeys)
-			]);
+			$match = true;
 
-			if (
-				preg_match(Utils::ToRegex($path, $tempKeys), $url, $tempValues)
-			) {
-				array_shift($tempKeys);
-				array_shift($tempValues);
+			$unmatchedUrlCopy = $unmatchedUrl;
 
-				$keys = array_merge($keys, $tempKeys);
-				$values = array_merge($values, $tempValues);
 
-				if (isset($route->router)) {
-					// Partial match
+			for ($i = 0; $i < count($pathSliced); $i++) {
+				array_shift($unmatchedUrlCopy);
 
-					$beforeMiddlewares = array_merge($beforeMiddlewares, $route->middlewares->before);
+				if (
+					$pathSliced[$i] !== $unmatchedUrl[$i] &&
+					!str_starts_with($pathSliced[$i], ':')
+				) {
+					$match = false;
 
-					$result = self::RecursiveMatch(
+					break;
+				}
+
+				if (str_starts_with($pathSliced[$i], ':')) {
+					$params[substr($pathSliced[$i], 1)] = $unmatchedUrl[$i];
+				}
+			}
+
+			if ($match) {
+				array_push($middlewares['before'], ...$path->middlewares->before);
+				array_push($middlewares['after'], ...$path->middlewares->after);
+
+				if (
+					isset($path->controller) &&
+					($path->method === $method || $path->method === 'ALL')
+				) {
+					// End
+
+					return [
+						"controller" => $path->controller,
+						"middlewares" => [
+							"after" => array_reverse($middlewares['after']),
+							"before" => $middlewares['before'],
+						],
+						"params" => $params,
+					];
+				} else if (!isset($path->controller)) {
+					// Partial
+
+					return self::RecursiveMatch(
 						$url,
 						$method,
-						$route->router,
-						$tempPath . '/' . $route->path,
-						$beforeMiddlewares,
-						$afterMiddlewares,
+						$path->router,
+						$unmatchedUrlCopy,
+						$middlewares,
+						$params
 					);
-
-					$afterMiddlewares = array_merge($afterMiddlewares, $route->middlewares->after);
-
-					return $result;
-				} else {
-					if ($method === $route->method || $route->method === 'ALL') {
-						$beforeMiddlewares = array_merge($beforeMiddlewares, $route->middlewares->before);
-						$afterMiddlewares = array_merge($afterMiddlewares, $route->middlewares->after);
-
-						Logger::Log('info', 'params', ["keys" => $keys, "values" => $values]);
-
-						// Fix params regex matching
-						// Fix partial matching auto full match
-
-						// Matched
-						return (object) [
-							'path' => $tempPath . $route->path,
-							'params' => (object) array_combine($keys, $values),
-							'controller' => $route->controller,
-							'middlewares' => (object) [
-								"before" => $beforeMiddlewares,
-								"after" => $afterMiddlewares,
-							]
-						];
-					}
 				}
 			}
 		}
@@ -111,16 +109,16 @@ class Router
 
 		// If url match with one of user defined paths in routes call defined controller method
 
-		$request = Singleton::GetRequest()->setParams($data->params);
+		$request = Singleton::GetRequest()->setParams((object) $data['params']);
 		$response = Singleton::GetResponse()->setAfterMiddleware(function (Response $response) use ($request, $data) {
 			// Run all after middleware sequentially
-			foreach ($data->middlewares->after as $middleware) {
+			foreach ($data['middlewares']['after'] as $middleware) {
 				$middleware($request, $response);
 			}
 		});
 
-		// Run all bedore middleware sequentially
-		foreach ($data->middlewares->before as $middleware) {
+		// Run all before middleware sequentially
+		foreach ($data['middlewares']['before'] as $middleware) {
 			$middleware($request, $response);
 
 			// Don't call controller or next before middleware if response ended in current middleware
@@ -129,15 +127,15 @@ class Router
 			}
 		}
 
-		$functionName = ResolveController::ResolveFunctionName($data->controller);
+		$functionName = ResolveController::ResolveFunctionName($data['controller']);
 
-		$controllerName = ResolveController::ResolveComputed($data->controller);
+		$controllerName = ResolveController::ResolveComputed($data['controller']);
 
 		$controller = new $controllerName($request, $response);
 
 		// Throw error if defined method doesn't exist in controller
 		if (!method_exists($controller, $functionName)) {
-			throw new Exception("Unable to load method: $functionName in $data->controller");
+			throw new Exception("Unable to load method: $functionName in " . $data['controller']);
 
 			return;
 		}

@@ -55,6 +55,6 @@ class Utils
 	 */
 	public static function GetUrl(): string
 	{
-		return trim(strtok($_SERVER["REQUEST_URI"], '?'), '/') . '/';
+		return trim(strtok($_SERVER["REQUEST_URI"], '?'), '/');
 	}
 }

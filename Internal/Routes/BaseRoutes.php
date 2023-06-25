@@ -46,14 +46,14 @@ class BaseRoutes
 	 *
 	 * After middlewares list
 	 */
-	protected array $afterMiddlewares = [];
+	public array $afterMiddlewares = [];
 
 	/**
 	 * Internal use only
 	 *
 	 * Before middlewares list
 	 */
-	protected array $beforeMiddlewares = [];
+	public array $beforeMiddlewares = [];
 
 	function __construct(bool $isRoot = false)
 	{

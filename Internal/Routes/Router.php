@@ -7,7 +7,6 @@ use Internal\Controllers\ResolveController;
 use Internal\Http\Response;
 use Application\Routes\Routes;
 use Internal\Http\Singleton;
-use Internal\Logger\Logger;
 
 /**
  * Main router
@@ -35,7 +34,6 @@ class Router
 
 			$unmatchedUrlCopy = $unmatchedUrl;
 
-
 			for ($i = 0; $i < count($pathSliced); $i++) {
 				array_shift($unmatchedUrlCopy);
 
@@ -54,8 +52,8 @@ class Router
 			}
 
 			if ($match) {
-				array_push($middlewares['before'], ...$path->middlewares->before);
-				array_push($middlewares['after'], ...$path->middlewares->after);
+				array_push($middlewares['before'], ...$routes->beforeMiddlewares, ...$path->middlewares->before);
+				array_push($middlewares['after'], ...$routes->afterMiddlewares, ...$path->middlewares->after);
 
 				if (
 					isset($path->controller) &&

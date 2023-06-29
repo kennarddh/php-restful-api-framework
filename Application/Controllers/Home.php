@@ -176,6 +176,28 @@ final class Home extends BaseController
 		$this->response->send(['result' => $db->Delete('test', ['name' => 'x'])], 200);
 	}
 
+	public function mysql_transaction()
+	{
+		$db = new MySqlAdapter([
+			'host' => 'localhost',
+			'username' => 'root',
+			'password' => 'root',
+			'database' => 'test_api_framework',
+			'port' => 3306
+		]);
+
+		try {
+
+			$db->Transaction(function () use ($db) {
+				$db->Insert('test', ['name' => 'baryzxc']);
+				$db->Insert('test', ['nothing' => 'asd']);
+			});
+			$this->response->send(['result' => 'success'], 200);
+		} catch (Exception $error) {
+			$this->response->send(['result' => 'error transaction failed'], 200);
+		}
+	}
+
 	public function mongo_insert()
 	{
 		$db = new MongoDBAdapter([

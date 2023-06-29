@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 ini_set('display_errors', 1);
 
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 // Change this relative path to application and internal directory parent
 define('PATH_FROM_INDEX_TO_APPLICATION', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
 

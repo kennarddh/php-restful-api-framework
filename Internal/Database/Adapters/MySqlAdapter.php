@@ -2,8 +2,10 @@
 
 namespace Internal\Database\Adapters;
 
+use Closure;
 use Exception;
 use mysqli;
+use mysqli_sql_exception;
 
 class MySqlAdapter extends BaseAdapter
 {
@@ -53,6 +55,24 @@ class MySqlAdapter extends BaseAdapter
 	public function __construct(array $data)
 	{
 		$this->connection = new mysqli($data['host'], $data['username'], $data['password'], $data['database'], $data['port']);
+	}
+
+	/**
+	 * Transaction
+	 */
+	public function Transaction(Closure $transactionCallback)
+	{
+		$this->connection->begin_transaction();
+
+		try {
+			$transactionCallback();
+
+			$this->connection->commit();
+		} catch (mysqli_sql_exception $exception) {
+			$this->connection->rollback();
+
+			throw $exception;
+		}
 	}
 
 	/**

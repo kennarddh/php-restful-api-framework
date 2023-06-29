@@ -1,1 +1,1 @@
-select uuid();
+SELECT * FROM test;

@@ -9,6 +9,24 @@ use TypeError;
 
 class MongoDBAdapter extends BaseAdapter
 {
+
+
+	/**
+	 * Connect
+	 */
+	public function __construct(array $data)
+	{
+		$this->connection = new Client(
+			$data['uri'],
+			isset($data['uriOptions']) ? $data['uriOptions'] : [],
+			isset($data['driverOptions']) ? $data['driverOptions'] : []
+		);
+
+		$database = $data['database'];
+
+		$this->connection = $this->connection->$database;
+	}
+
 	/**
 	 * Escape data
 	 */
@@ -61,22 +79,6 @@ class MongoDBAdapter extends BaseAdapter
 			default:
 				throw new TypeError("Type " . gettype($data) . ' is not supported');
 		}
-	}
-
-	/**
-	 * Connect
-	 */
-	public function __construct(array $data)
-	{
-		$this->connection = new Client(
-			$data['uri'],
-			isset($data['uriOptions']) ? $data['uriOptions'] : [],
-			isset($data['driverOptions']) ? $data['driverOptions'] : []
-		);
-
-		$database = $data['database'];
-
-		$this->connection = $this->connection->$database;
 	}
 
 	/**

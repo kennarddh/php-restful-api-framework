@@ -24,20 +24,20 @@ abstract class BaseAdapter
 	/**
 	 * Select data
 	 */
-	public abstract function Get(string $tableName, array $selects, array $filter): array;
+	public abstract function Get(string $tableName, array $selects, array $filter, ?array $options): array;
 
 	/**
 	 * Insert new data
 	 */
-	public abstract function Insert(string $tableName, array $data): bool;
+	public abstract function Insert(string $tableName, array $data, ?array $options): bool;
 
 	/**
 	 * Update data
 	 */
-	public abstract function Update(string $tableName, array $data, array $filter): bool;
+	public abstract function Update(string $tableName, array $data, array $filter, ?array $options): bool;
 
 	/**
 	 * Delete data
 	 */
-	public abstract function Delete(string $tableName, array $filter): bool;
+	public abstract function Delete(string $tableName, array $filter, ?array $options): bool;
 }

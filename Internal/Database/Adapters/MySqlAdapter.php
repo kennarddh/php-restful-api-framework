@@ -65,7 +65,7 @@ class MySqlAdapter extends BaseAdapter
 		$this->connection->begin_transaction();
 
 		try {
-			$transactionCallback();
+			$transactionCallback($this->connection);
 
 			$this->connection->commit();
 		} catch (mysqli_sql_exception $exception) {
@@ -78,7 +78,7 @@ class MySqlAdapter extends BaseAdapter
 	/**
 	 * Select data
 	 */
-	public function Get(string $tableName, array $selects, array $filter): array
+	public function Get(string $tableName, array $selects, array $filter, ?array $options = []): array
 	{
 		$sql = "SELECT " . join(', ', $selects) . " FROM $tableName";
 
@@ -103,7 +103,7 @@ class MySqlAdapter extends BaseAdapter
 	/**
 	 * Insert new data
 	 */
-	public function Insert(string $tableName, array $data): bool
+	public function Insert(string $tableName, array $data, ?array $options = []): bool
 	{
 		$values = [];
 
@@ -125,7 +125,7 @@ class MySqlAdapter extends BaseAdapter
 	/**
 	 * Update data
 	 */
-	public function Update(string $tableName, array $data, array $filter): bool
+	public function Update(string $tableName, array $data, array $filter, ?array $options = []): bool
 	{
 		if (empty($data)) {
 			throw new Exception('Update data cannot be empty');
@@ -153,7 +153,7 @@ class MySqlAdapter extends BaseAdapter
 	/**
 	 * Delete data
 	 */
-	public function Delete(string $tableName, array $filter): bool
+	public function Delete(string $tableName, array $filter, ?array $options = []): bool
 	{
 		$sql = "DELETE FROM $tableName";
 

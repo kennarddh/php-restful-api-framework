@@ -188,20 +188,20 @@ final class Home extends BaseController
 
 		try {
 
-			$db->Transaction(function () use ($db) {
-				$db->Insert('test', ['name' => 'baryzxc']);
-				$db->Insert('test', ['nothing' => 'asd']);
+			$db->Transaction(function ($session) use ($db) {
+				$db->Insert('test', ['name' => 'baryzxc'], ['session' => $session]);
+				$db->Insert('test', ['nothing' => 'asd'], ['session' => $session]);
 			});
 			$this->response->send(['result' => 'success'], 200);
 		} catch (Exception $error) {
-			$this->response->send(['result' => 'error transaction failed'], 200);
+			$this->response->send(['result' => 'error transaction failed'], 500);
 		}
 	}
 
 	public function mongo_insert()
 	{
 		$db = new MongoDBAdapter([
-			'uri' => 'mongodb://127.0.0.1:27017/',
+			'uri' => 'mongodb://127.0.0.1:27017/?replicaSet=rs0',
 			'database' => 'test_api_framework',
 		]);
 
@@ -211,7 +211,7 @@ final class Home extends BaseController
 	public function mongo_get()
 	{
 		$db = new MongoDBAdapter([
-			'uri' => 'mongodb://127.0.0.1:27017/',
+			'uri' => 'mongodb://127.0.0.1:27017/?replicaSet=rs0',
 			'database' => 'test_api_framework',
 		]);
 
@@ -221,7 +221,7 @@ final class Home extends BaseController
 	public function mongo_update()
 	{
 		$db = new MongoDBAdapter([
-			'uri' => 'mongodb://127.0.0.1:27017/',
+			'uri' => 'mongodb://127.0.0.1:27017/?replicaSet=rs0',
 			'database' => 'test_api_framework',
 		]);
 
@@ -231,11 +231,30 @@ final class Home extends BaseController
 	public function mongo_delete()
 	{
 		$db = new MongoDBAdapter([
-			'uri' => 'mongodb://127.0.0.1:27017/',
+			'uri' => 'mongodb://127.0.0.1:27017/?replicaSet=rs0',
 			'database' => 'test_api_framework',
 		]);
 
 		$this->response->send(['result' => $db->Delete('test', ['_id' => 'a'])], 200);
+	}
+
+	public function mongo_transaction()
+	{
+		$db = new MongoDBAdapter([
+			'uri' => 'mongodb://127.0.0.1:27017/?replicaSet=rs0',
+			'database' => 'test_api_framework',
+		]);
+
+		try {
+			$db->Transaction(function ($session) use ($db) {
+				$db->Insert('test', ['nothing' => 'asadghfshfssd'], ['session' => $session]);
+				throw new Exception();
+			});
+
+			$this->response->send(['result' => 'success'], 200);
+		} catch (Exception $error) {
+			$this->response->send(['result' => 'error transaction failed'], 500);
+		}
 	}
 
 	public function jwt_decode()

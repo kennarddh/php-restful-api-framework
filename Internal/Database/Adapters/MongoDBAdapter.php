@@ -2,6 +2,7 @@
 
 namespace Internal\Database\Adapters;
 
+use Closure;
 use Exception;
 use Internal\Logger\Logger;
 use MongoDB\Client;
@@ -9,14 +10,13 @@ use TypeError;
 
 class MongoDBAdapter extends BaseAdapter
 {
-
-
+	private Client $client;
 	/**
 	 * Connect
 	 */
 	public function __construct(array $data)
 	{
-		$this->connection = new Client(
+		$this->client = new Client(
 			$data['uri'],
 			isset($data['uriOptions']) ? $data['uriOptions'] : [],
 			isset($data['driverOptions']) ? $data['driverOptions'] : []
@@ -24,7 +24,7 @@ class MongoDBAdapter extends BaseAdapter
 
 		$database = $data['database'];
 
-		$this->connection = $this->connection->$database;
+		$this->connection = $this->client->selectDatabase($database);
 	}
 
 	/**
@@ -82,11 +82,33 @@ class MongoDBAdapter extends BaseAdapter
 	}
 
 	/**
+	 * Transaction
+	 */
+	public function Transaction(Closure $transactionCallback)
+	{
+		$session = $this->client->startSession();
+
+		$session->startTransaction();
+
+		try {
+			$transactionCallback($session);
+
+			$session->commitTransaction();
+		} catch (Exception $exception) {
+			$session->abortTransaction();
+
+			throw $exception;
+		} finally {
+			$session->endSession();
+		}
+	}
+
+	/**
 	 * Select data
 	 */
-	public function Get(string $collectionName, array $selects, array $filter): array
+	public function Get(string $collectionName, array $selects, array $filter, ?array $options = []): array
 	{
-		$collection = $this->connection->$collectionName;
+		$collection = $this->connection->selectCollection($collectionName);
 
 		$projection = ['_id' => 0];
 
@@ -98,6 +120,7 @@ class MongoDBAdapter extends BaseAdapter
 			$filter,
 			[
 				'projection' => $projection,
+				...$options
 			]
 		);
 
@@ -121,12 +144,12 @@ class MongoDBAdapter extends BaseAdapter
 	/**
 	 * Insert new data
 	 */
-	public function Insert(string $collectionName, array $data): bool
+	public function Insert(string $collectionName, array $data, ?array $options = []): bool
 	{
-		$collection = $this->connection->$collectionName;
+		$collection = $this->connection->selectCollection($collectionName);
 
 		try {
-			$insertOneResult = $collection->insertOne($data);
+			$insertOneResult = $collection->insertOne($data, $options);
 		} catch (Exception $e) {
 			Logger::Log('error', "MongoDB Insert Error\n" . $e->__toString());
 
@@ -139,12 +162,12 @@ class MongoDBAdapter extends BaseAdapter
 	/**
 	 * Update data
 	 */
-	public function Update(string $collectionName, array $data, array $filter): bool
+	public function Update(string $collectionName, array $data, array $filter, ?array $options = []): bool
 	{
-		$collection = $this->connection->$collectionName;
+		$collection = $this->connection->selectCollection($collectionName);
 
 		try {
-			$updateManyResult = $collection->updateMany($filter, ['$set' => $data]);
+			$updateManyResult = $collection->updateMany($filter, ['$set' => $data], $options);
 		} catch (Exception $e) {
 			Logger::Log('error', "MongoDB Update Error\n" . $e->__toString());
 
@@ -157,12 +180,12 @@ class MongoDBAdapter extends BaseAdapter
 	/**
 	 * Delete data
 	 */
-	public function Delete(string $collectionName, array $filter): bool
+	public function Delete(string $collectionName, array $filter, ?array $options = []): bool
 	{
-		$collection = $this->connection->$collectionName;
+		$collection = $this->connection->selectCollection($collectionName);
 
 		try {
-			$deleteManyResult = $collection->deleteMany($filter);
+			$deleteManyResult = $collection->deleteMany($filter, $options);
 		} catch (Exception $e) {
 			Logger::Log('error', "MongoDB Delete Error\n" . $e->__toString());
 

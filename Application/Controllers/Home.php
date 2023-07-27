@@ -7,6 +7,7 @@ use Internal\Configuration\Configuration;
 use Internal\Controllers\BaseController;
 use Internal\Database\Adapters\MongoDBAdapter;
 use Internal\Database\Adapters\MySqlAdapter;
+use Internal\Database\Database;
 use Internal\Libraries\Validation;
 use Internal\Logger\Logger;
 use MongoDB\BSON;

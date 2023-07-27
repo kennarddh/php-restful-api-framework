@@ -265,7 +265,7 @@ final class Home extends BaseController
 
 	public function db_get()
 	{
-		$this->response->send(['result' => Database::Get('test', ['name', '_id'], ['_id' => new BSON\ObjectID('63e4dc0c90c62b80d70f0e56')])], 200);
+		$this->response->send(['result' => Database::Get('test', ['name', '_id'], ['_id' => new BSON\ObjectID('64c2557f0c7d946d430cde64')])], 200);
 	}
 
 	public function db_update()
@@ -275,14 +275,14 @@ final class Home extends BaseController
 
 	public function db_delete()
 	{
-		$this->response->send(['result' => Database::Delete('test', ['_id' => 'a'])], 200);
+		$this->response->send(['result' => Database::Delete('test',['_id' => new BSON\ObjectID('64c2557f0c7d946d430cde64')])], 200);
 	}
 
 	public function db_transaction()
 	{
 		try {
 			Database::Transaction(function ($session) {
-				Database::Insert('test', ['nothing' => 'asadghfshfssd'], ['session' => $session]);
+				Database::Insert('test', ['nothing2' => 'asadghfshfssd'], ['session' => $session]);
 				throw new Exception();
 			});
 

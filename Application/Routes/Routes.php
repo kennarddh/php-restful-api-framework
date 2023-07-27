@@ -26,6 +26,7 @@ class Routes extends BaseRoutes
 		$this->get('env', 'Home::env');
 
 		$this->post('validate', 'Home::validate');
+
 		$this->get('mysql', 'Home::mysql');
 		$this->post('mysql_insert', 'Home::mysql_insert');
 		$this->post('mysql_update', 'Home::mysql_update');
@@ -37,6 +38,12 @@ class Routes extends BaseRoutes
 		$this->post('mongo_update', 'Home::mongo_update');
 		$this->post('mongo_delete', 'Home::mongo_delete');
 		$this->post('mongo_transaction', 'Home::mongo_transaction');
+
+		$this->post('db_insert', 'Home::db_insert');
+		$this->post('db_get', 'Home::db_get');
+		$this->post('db_update', 'Home::db_update');
+		$this->post('db_delete', 'Home::db_delete');
+		$this->post('db_transaction', 'Home::db_transaction');
 
 		$this->post('jwt_encode', 'Home::jwt_encode');
 		$this->post('jwt_decode', 'Home::jwt_decode');

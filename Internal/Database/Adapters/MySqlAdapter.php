@@ -60,7 +60,7 @@ class MySqlAdapter extends BaseAdapter
 	/**
 	 * Transaction
 	 */
-	public function Transaction(Closure $transactionCallback)
+	public function Transaction(Closure $transactionCallback): void
 	{
 		$this->connection->begin_transaction();
 

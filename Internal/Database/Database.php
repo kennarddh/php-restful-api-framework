@@ -2,6 +2,7 @@
 
 namespace Internal\Database;
 
+use Closure;
 use Internal\Database\Adapters\BaseAdapter;
 
 /**
@@ -14,7 +15,7 @@ class Database
 	/**
 	 * Select data
 	 */
-	public static function Get(string $tableName, array $selects, array $filter, ?array $options): array
+	public static function Get(string $tableName, array $selects, array $filter, ?array $options = []): array
 	{
 		return self::$adapter->Get($tableName, $selects, $filter, $options);
 	}
@@ -22,7 +23,7 @@ class Database
 	/**
 	 * Insert new data
 	 */
-	public static function Insert(string $tableName, array $data, ?array $options): bool
+	public static function Insert(string $tableName, array $data, ?array $options = []): bool
 	{
 		return self::$adapter->Insert($tableName, $data, $options);
 	}
@@ -30,7 +31,7 @@ class Database
 	/**
 	 * Update data
 	 */
-	public static function Update(string $tableName, array $data, array $filter, ?array $options): bool
+	public static function Update(string $tableName, array $data, array $filter, ?array $options = []): bool
 	{
 		return self::$adapter->Update($tableName, $data, $filter, $options);
 	}
@@ -38,8 +39,16 @@ class Database
 	/**
 	 * Delete data
 	 */
-	public static function Delete(string $tableName, array $filter, ?array $options): bool
+	public static function Delete(string $tableName, array $filter, ?array $options = []): bool
 	{
 		return self::$adapter->Delete($tableName, $filter, $options);
+	}
+
+	/**
+	 * Transaction
+	 */
+	public static function Transaction(Closure $transactionCallback): void
+	{
+		self::$adapter->Transaction($transactionCallback);
 	}
 }

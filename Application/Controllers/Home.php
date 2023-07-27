@@ -258,6 +258,40 @@ final class Home extends BaseController
 		}
 	}
 
+	public function db_insert()
+	{
+		$this->response->send(['result' => Database::Insert('test', ['name' => 'x'])], 200);
+	}
+
+	public function db_get()
+	{
+		$this->response->send(['result' => Database::Get('test', ['name', '_id'], ['_id' => new BSON\ObjectID('63e4dc0c90c62b80d70f0e56')])], 200);
+	}
+
+	public function db_update()
+	{
+		$this->response->send(['result' => Database::Update('test', ['name' => 'foo'], ['name' => 'x'])], 200);
+	}
+
+	public function db_delete()
+	{
+		$this->response->send(['result' => Database::Delete('test', ['_id' => 'a'])], 200);
+	}
+
+	public function db_transaction()
+	{
+		try {
+			Database::Transaction(function ($session) {
+				Database::Insert('test', ['nothing' => 'asadghfshfssd'], ['session' => $session]);
+				throw new Exception();
+			});
+
+			$this->response->send(['result' => 'success'], 200);
+		} catch (Exception $error) {
+			$this->response->send(['result' => 'error transaction failed'], 500);
+		}
+	}
+
 	public function jwt_decode()
 	{
 		$this->response->send(['result' => JWT::Decode(

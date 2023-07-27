@@ -2,6 +2,7 @@
 
 namespace Internal\Database\Adapters;
 
+use Closure;
 use Exception;
 
 /**
@@ -40,4 +41,9 @@ abstract class BaseAdapter
 	 * Delete data
 	 */
 	public abstract function Delete(string $tableName, array $filter, ?array $options): bool;
+
+	/**
+	 * Transaction
+	 */
+	public abstract function Transaction(Closure $transactionCallback): void;
 }

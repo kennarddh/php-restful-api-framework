@@ -84,7 +84,7 @@ class MongoDBAdapter extends BaseAdapter
 	/**
 	 * Transaction
 	 */
-	public function Transaction(Closure $transactionCallback)
+	public function Transaction(Closure $transactionCallback): void
 	{
 		$session = $this->client->startSession();
 

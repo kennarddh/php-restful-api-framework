@@ -12,6 +12,11 @@ class Database
 {
 	private static BaseAdapter $adapter;
 
+	public static function SetAdapter(BaseAdapter $adapter)
+	{
+		self::$adapter = $adapter;
+	}
+
 	/**
 	 * Select data
 	 */

@@ -18,6 +18,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . 
 use Common\Autoloader;
 use Internal\Routes\Router;
 use Application\Configuration\Logger\Configuration as LoggerConfiguration;
+use Application\Configuration\Database\Configuration as DatabaseConfiguration;
 use Internal\Configuration\Configuration;
 
 // Register autoloader
@@ -25,6 +26,7 @@ AutoLoader::Register();
 
 // Load configuration
 LoggerConfiguration::Register();
+DatabaseConfiguration::Register();
 Configuration::LoadEnvFile();
 
 // Register router

@@ -68,7 +68,6 @@ class BaseRoutes
 		// Error handler wrapper
 		$errorHandler = function () {
 			$error = error_get_last();
-
 			if ($error === null) {
 				OutputBuffer::flush();
 
